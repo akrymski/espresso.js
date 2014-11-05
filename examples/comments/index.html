@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+</head>
+
+<body>
+
+<div class="commentBox">
+    <h1>Comments</h1>
+    <div data-ref="commentList"> 
+        <div data-ref="comment">
+            <a style="float:right" href="#" data-ref="remove">[x]</a>
+            <h2 data-ref="author">comment.author</h2>
+            <span data-ref="html">comment.html</span>
+        </div>
+    </div>
+    <form name="commentForm" data-ref="commentForm">
+        <p class="err"></p>
+        <input type="text" data-ref="author" placeholder="Your name" />
+        <input type="text" data-ref="text" placeholder="Say something..." />
+        <input type="submit" value="Add" />
+    </form>
+</div>
+
+<script src="../../espresso.min.js"></script>
+<script src="showdown.js"></script>
+<script src="app.js"></script>
+
+</body>
+
+</html>

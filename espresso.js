@@ -257,7 +257,9 @@ var Controller = extend(Object, EventEmitter, {
       } 
     } else if (attr.substr(0,2) === 'on') {
       var eventName = attr.substr(2).toLowerCase();
-      this.listenTo(node, eventName, value);
+      this.listenTo(node, eventName, function(fn, e) {
+        if (fn.call(this, e) !== true && e.preventDefault) e.preventDefault();
+      }.bind(this, value));
     } else node.setAttribute(attr, value);
   },
   _wrap: function(fn) {
