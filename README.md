@@ -1,12 +1,14 @@
-# Web Framework
+# Espresso.js
 
-Simple framework based on Backbone, with clear MVC separation.  No dependency on jQuery or Underscore.  Focus on speed & simplicity.
+A tiny MVC framework with a focus on speed & simplicity.
 
-### Benefits over Backbone
+### Features
 
 - tiny (less than 500 lines)
 - zero dependencies
-- much faster everything: view creation & updates, events, model change detection, etc.
+- performance and memory focused
+- does not aim to support anything below IE10, but may work on older browsers using a [shim](https://github.com/termi/ES5-DOM-SHIM)
+
 - caching DOM nodes to reduce [layout thrashing](http://wilsonpage.co.uk/preventing-layout-thrashing/) and generally speed things up even more
 - no templating/string interpolation - use the DOM Luke!
 - garbage collection: no zombie views because of `include` mechanism
@@ -16,29 +18,29 @@ Simple framework based on Backbone, with clear MVC separation.  No dependency on
 - no support for IE < 9 (but may work with a shim)
 
 ## EventEmitter
-EventEmitter serves as a mixin for Models & Collections and any other object you'd like Controllers to listen to.  The interface is intentionally the same as that for DOM Nodes.  We also add a trigger() event to Node prototype for conveniance.
+All classes in espresso.js inherit from `EventEmitter`, which is a tiny implementation of node's [equivalent module](http://nodejs.org/api/events.html).
 
-### addEventListener(event, handler)
-### removeEventListener(event, handler)
-### trigger(event, data)
+### addListener(event, handler)
+### removeListener(event, handler)
+### emit(event, [arg1], [arg2])
 
 ## Views
 A view is a DOM Node.  For example:
 
     <div id="app-view">
       <input placeholder="Enter Your Name" />
-      <h1>Howdy, <b ref="name" /><h1>
+      <h1>Howdy, <b data-ref="name" /><h1>
     </div>
 
 Being a DOM node, there's no string interpolation to be done at runtime, nor does the browser need to parse the HTML from a string.  It also means designers can actually mockup a site which you can make interactive without messing with templating languages.
 
-A `ref` is a special attribute that allows us to refer to that `node` by name in the `Controller`.  You can also use CSS selectors to refer to nodes, however they are **significantly** less efficient as a `querySelector` call needs to be made each time, and `matchesSelector` calls need to be made for event handling.
+A `data-ref` is a special attribute that allows us to refer to that `node` by name in the `Controller`.  
 
 ## Controllers
 
 A controller is the mediator between model and view.  Example:
 
-    var AppController = Controller.extend({
+    var App = Controller.extend({
       init: function(options) {
         this.on(this.view, { 'keypress input' : 'name' });
         this.on(this.model, { 'change name' : 'text name' })({ changes: this.model.attributes });
@@ -152,75 +154,12 @@ A `List` provides a simple way to display a `Collection` and keep it in sync wit
 
 ### constructor
 
-    new List(view, collection, iterator)
+    new List(iterator, [collection])
 
-The iterator is a function that returns a `Controller` instance or a DOM `Node` or an HTML `String`.
+The `iterator` can one of the following:
 
-For example:
+- a class that inherits from `Controller`
+- a function that returns a `Controller` instance
+- a function that returns a DOM `Node` or an HTML `String`
 
-    var collection = [ { name: 'bob' }, { name: 'marley' } ];
-    new List(document.body, collection, function(model, index) { 
-      return new ItemController('item-view', model);
-    });
-
-If `item-view` is actually the first child of the list node, then the above can be shortened to:
-
-    new List(document.body, collection, ItemController);
-
-`Lists` are also useful where traditionally you'd use a for-loop inside a template:
-
-    <ul ref="files">
-      <% for-each file in files %><li class="file">{{ name }}</li><% endfor %>
-    </ul>
-
-Can be done as follows:
-
-    new List(this.ref.files, files, function(name, index) {
-      return '<li class="file">' + name +'</li>';
-    });
-
-## Code Guidelines
-
-Use ES5 methods (plus a shim if necessary to support < IE9) such as this:
-
-    for (var i = 0, len = arr.length; i < len; i++) { ... }
-
-    Object.keys(obj).forEach(function(key) {
-      var value = obj[key];
-    });
-
-    Object.create(prototype, methods);
-
-## Libraries
-
-Other libraries you may wish to use in conjunction with this framework:
-
-DOM Manipulation:
-
-    https://github.com/remy/min.js/blob/master/src/%24.js
-    https://github.com/quilljs/quill/blob/master/src/lib/dom.coffee
-
-Router:
-
-    http://visionmedia.github.io/page.js/
-    https://github.com/chrisdavies/rlite/blob/master/rlite.js
-    https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history
-
-Ajax:
-
-    https://github.com/substack/http-browserify
-    https://github.com/visionmedia/superagent
-
-Triggering DOM Events:
-
-    https://github.com/adamsanderson/trigger-event/blob/master/index.js
-
-Animation
-
-    http://julian.com/research/velocity/
-    http://impulse.luster.io
-
-Static server:
-
-    python -m SimpleHTTPServer 8080
 

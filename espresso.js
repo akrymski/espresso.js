@@ -1,35 +1,24 @@
-
 var slice = Array.prototype.slice;
 var splice = Array.prototype.splice;
 var noop = function() {};
+var isUndefined = function(arg) { return arg === void 0 };
+var isFunction = function(x) { return typeof x === 'function' };
+var isNumber = function(x) { return typeof x === 'number' };
+var isObject = function(x) { return typeof x === 'object' && x !== null };
+var isString = function(x) { return typeof x === 'string' };
+var isNode = function(x) { return x && x.nodeType > 0 };
 var isArray = Array.isArray;
-var isObject = function(o) { return typeof o === 'object'; };
-var isNode = function(o) { return o instanceof window.Node || o.nodeType > 0; };
-var isString = function (o) { return Object.prototype.toString.call(o) === '[object String]'; };
-var isNumber = function(o) { return !isNaN(parseFloat(o)); };
-var toObject = function(key, value) { var x = {}; x[key] = value; return x; };
-var mixin = function(object) {
-  var copy = function(object, mixin) {
-    Object.getOwnPropertyNames(mixin).forEach(function(prop) {
-      object[prop] = mixin[prop];
-    });
-  };
-  for (var i = 1, len = arguments.length; i < len; i++) copy(object, arguments[i]);
-  return object;
+var toObject = function(key, val) { var x = {}; x[key] = val; return x };
+var assign = function(o) {
+  for (var i = 1, a = arguments, len = a.length; i < len; i++) {
+    for (var prop in a[i]) if (a[i].hasOwnProperty(prop)) o[prop] = a[i][prop];
+  }
+  return o;
 };
-var extend = function(parent, protoProps, staticProps) {
-  // create a subclass
-  var child = function() { this.constructor.apply(this, arguments); };
-  child.extend = function(protoProps, staticProps) {
-    return extend(this, protoProps, staticProps);
-  };
-  child.mixin = function(props) {
-    mixin(this.prototype, props);
-    return this;
-  };
-  child.prototype = Object.create(parent.prototype);
-  if (protoProps) mixin(child.prototype, protoProps);
-  if (staticProps) mixin(child, staticProps);
+var extend = function(parentClass, props) {
+  var child = function() { this.constructor.apply(this, arguments) };
+  child.prototype = Object.create(parentClass.prototype);
+  if (props) assign.apply(this, [ child.prototype ].concat(slice.call(arguments, 1)));
   return child;
 };
 var isEqual = function(a, b) {
@@ -43,7 +32,7 @@ var isEqual = function(a, b) {
     }
     return true;
   }
-  if (typeof a === 'object' && typeof b === 'object') {
+  if (isObject(a) && isObject(b)) {
     var aKeys = Object.keys(a), bKeys = Object.keys(b);
     if (aKeys.length !== bKeys.length) return false;
     for (i = 0, len = aKeys.length; i < len; i++) {
@@ -54,57 +43,42 @@ var isEqual = function(a, b) {
   }
   return false;
 };
-var guid = (function() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-  }
-  return function() {
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  };
-})();
-
-// EventEmitter mixin
 var EventEmitter = {
-  addEventListener: function(name, handler) {
-    var events = this._events || (this._events = {});
-    var handlers = this._events[name] || (this._events[name] = []);
-    handlers.push(handler);
+  addListener: function(name, fn) {
+    var listeners = this._listeners || (this._listeners = {});
+    var handlers = listeners[name] || (listeners[name] = []);
+    handlers.push(fn);
   },
-  removeEventListener: function(name, handler) {
-    var events = this._events || (this._events = {});
-    var handlers = this._events[name];
-    if (handlers) handlers.splice(handlers.indexOf(handler), 1);
+  removeListener: function(name, fn) {
+    var listeners = (this._listeners || {})[name];
+    if (listeners) listeners.splice(listeners.indexOf(fn), 1);
   },
-  trigger : function(name, arg) {
-    if (!this._events) return this;
-    arg = arg || {};
-    (this._events[name] || []).forEach(function(h) { h(arg); });
-    arg.event = name;
-    (this._events.any || []).forEach(function(h) { h(arg); });
+  emit : function(name) {
+    var listeners = this._listeners || (this._listeners = {});
+    var args = slice.call(arguments, 1);
+    (listeners[name] || []).forEach(function(h) { h.apply(this, args); }.bind(this));
   }
 };
 
 // A Model is a JSON object that has a set() method which fires a change event
 // You can extend a model to have custom methods if you wish
 // It's up to you whether you use the get() method or not, which handles things like defaults and functions
-var Model = extend(Object, {
+var Model = extend(Object, EventEmitter, {
   defaults: {},
   constructor: function(attr) {
-    mixin(this, attr || {});
+    assign(this, attr || {});
     this.init(attr);
   },
-  init: function(attr) {},
+  init: noop,
   set: function(key, value) {
     var attr = arguments.length < 2 ? key : toObject(key, value);
     if (!this.isEqual(attr)) {
-      mixin(this, attr);
-      this.trigger('change', this);
+      assign(this, attr);
+      this.emit('change', this);
     }
     return this;
   },
   isEqual: function(attr) {
-    // Does deep equality comparison
-    var changes = {};
     for (var key in attr) {
       var v1 = attr[key], v2 = this[key];
       if (!isEqual(v1, v2)) return false;
@@ -115,17 +89,14 @@ var Model = extend(Object, {
     return this[attr] || this.defaults[attr];
   },
   toObject: function() {
-    var res = {};
-    Object.keys(this).forEach(function(key) { 
-      res[key] = this[key];
-    }.bind(this));
+    return assign({}, this);
   }
-}).mixin(EventEmitter);
+})
 
-// A collection holds an ordered? number of JSON objects and provides helper methods like add, remove, get, filter, etc.
+// A collection holds an ordered number of Objects and provides helper methods like add, remove, get, filter, etc.
 // A collection also triggers a change event that a List can subscribe to directly
 // A collection creates GUIDs (or auto-increments) for objects by default
-var Collection = extend(Object, {
+var Collection = extend(Object, EventEmitter, {
   idAttribute: 'id', 
   constructor: function(items) {
     this.reset(items);
@@ -135,7 +106,7 @@ var Collection = extend(Object, {
   },
   reset: function(items) {
     this.items = items || [];
-    this.trigger('change');
+    this.emit('change');
   },
   setAll: function(items, key) {
     // smart set using add/remove and idAttribute
@@ -144,7 +115,7 @@ var Collection = extend(Object, {
     var PK = key || this.idAttribute;
     var prevItems = this.items;
     
-    var id, len, item, newIDs = {}, prevIDs = {}, i = 0;
+    var id, len, item, newIDs = {}, i = 0;
 
     // get IDs of new models
     items.forEach(function(x, i) { newIDs[x[PK]] = i; });
@@ -182,22 +153,21 @@ var Collection = extend(Object, {
     if (index instanceof Collection) return this.setAll(index.toArray(), value);
     if (isArray(index)) return this.setAll(index, value);
     if (isEqual(this.items[index], value)) return;
+
     this.items[index] = value;
-    this.trigger('change', { updated: value, index: index });
+    this.emit('change', { updated: value, index: index });
     return this;
   },
   push: function(obj) {
     this.splice(this.items.length, 0, obj);
   },
   remove: function(index) {
-    if (typeof index === 'object') index = this.find(index);
+    if (isObject(index)) index = this.find(index);
     this.splice(index, 1);
   },
   // find index of matching object, eg: find({ id: 1 });
   find: function(attr) {
-    var idAttribute = this.idAttribute, items = this.items;
-    var isEqual = Model.prototype.isEqual;
-
+    var items = this.items, isEqual = Model.prototype.isEqual;
     for (var i = 0, len = items.length; i < len; i++) {
       if (isEqual.call(items[i], attr)) return i;
     }
@@ -206,28 +176,28 @@ var Collection = extend(Object, {
   splice: function(index) {
     var removed = splice.apply(this.items, arguments);
     var added = slice.call(arguments, 2);
-    this.trigger('change', { added: added, removed: removed, index: index });
+    this.emit('change', { added: added, removed: removed, index: index });
   },
   toArray: function() {
     return this.items;
   },
-  forEach: function(fn) { return this.items.forEach(fn); },
-  map: function(fn) { return this.items.map(fn); },
-  filter: function(fn) { return this.items.filter(fn); }
-}).mixin(EventEmitter);
+  forEach: function(fn) { return this.items.forEach(fn) },
+  map: function(fn) { return this.items.map(fn) },
+  filter: function(fn) { return this.items.filter(fn) }
+});
 
-var Controller = extend(Object, {
-  refAttribute: 'ref',
+var Controller = extend(Object, EventEmitter, {
+  refAttribute: 'data-ref',
   constructor: function(options) {
-    mixin(this, options || {});
+    assign(this, options || {});
     this.model = (this.model instanceof Model) ? this.model : new Model(this.model);
-    this.render = this.wrapRender(this.render).bind(this);
+    this.render = this._wrap(this.render).bind(this);
     this.setView = this.setView.bind(this);
     this.init(options);
     if (this.view) this.setView(this.view);
   },
-  init: function() {}, // can override
-  render: function() {}, // must override
+  init: noop, // can override
+  render: noop, // must override
   setView: function(view) {
     this.view = view;
     this._refs();
@@ -242,22 +212,33 @@ var Controller = extend(Object, {
     }
     ref.view = this.view;
   },
-  set: function(model) {
-    this.model.set(model);
+  set: function(attrs) {
+    this.model.set(attrs);
     return this;
   },
   listenTo: function(obj, eventName, fn) {
-    this._listeners = this._listeners || [];
-    if (typeof obj.addEventListener !== 'function') throw "Can't listen to this object!";
+    this._listenTo = this._listenTo || [];
+    var on = obj.addEventListener || obj.addListener || obj.on;
+    if (!isFunction(on)) throw "Can't listen to this object!";
     fn = fn.bind(this);
-    obj.addEventListener(eventName, fn, false);
-    this._listeners.push([ obj, eventName, fn ]);
+    on.call(obj, eventName, fn, false);
+    this._listenTo.push([ obj, eventName, fn ]);
     return this;
   },
-  remove: function(view) {
+  stopListening: function(obj, eventName) {
+    (this._listenTo|| []).forEach(function(x) {
+      if (!isUndefined(obj) && obj !== x[0]) return;
+      if (!isUndefined(eventName) && eventName !== x[1]) return;
+
+      var removeListener = x[0].removeEventListener || x[0].removeListener || x[0].off;
+      removeListener(x[1], x[2]);
+    }.bind(this));
+  },
+  remove: function(node) {
+    this.stopListening();
     (this._includes || []).forEach(function(x) { x.remove(); });
-    (this._listeners || []).forEach(function(x) { x[0].removeEventListener(x[1], x[2]); });
-    if (this.view.parentNode && !view) this.view.parentNode.removeChild(this.view); // remove the view
+    if (node === false) return; // dont remove the node
+    if (this.view.parentNode) this.view.parentNode.removeChild(this.view);
   },
   include: function(controller, node) {
     this._includes = this._includes || [];
@@ -265,64 +246,43 @@ var Controller = extend(Object, {
     if (node) controller.setView(node);
     return controller;
   },
-  trigger: function(obj, name, e) {
-    (this._listeners || []).forEach(function(x) {
-      if (obj === x[0] && name === x[1]) x[2].call(this, e);
-    });
+  setAttribute: function(node, attr, value) {
+    if (attr === 'text') node.textContent = value;
+    else if (attr === 'html') node.innerHTML = value;
+    else if (attr === 'display') node.style.display = value ? '' : 'none';
+    else if (attr === 'class' && isObject(value)) {
+      for (var className in value) {
+        if (value[className]) node.classList.add(className);
+        else node.classList.remove(className);
+      } 
+    } else if (attr.substr(0,2) === 'on') {
+      var eventName = attr.substr(2).toLowerCase();
+      this.listenTo(node, eventName, value);
+    } else node.setAttribute(attr, value);
   },
-  wrapRender: function(fn) {
+  _wrap: function(fn) {
     return function() {
+      var set = this.setAttribute;
       var prev = this.DOM || {};
-      var DOM = this.DOM = fn.call(this);
-      var selector, props, prop, prevProps, node, value;
+      var next = this.DOM = fn.call(this);
+      if (!isObject(next)) return;
+      for (var ref in next) {
+        var node = this.ref[ref];
+        if (isUndefined(node)) throw "Invalid data-ref name specified";
+        var nextNode = next[ref], prevNode = prev[ref] || {};
 
-      if (typeof DOM !== 'object') return;
-      for (selector in DOM) {
-        props = DOM[selector];
-        prevProps = prev[selector] || {};
-
-        if (selector in this.ref) {
-          // TODO handle CSS selectors?
-          node = this.ref[selector];
-          if (props instanceof Controller && prevProps !== props) {
-            this.include(props, node); // it's an include
-          } else {
-
-            for (prop in props) {
-              value = props[prop];
-              if (prevProps[prop] !== value) { // process update if DOM Node has new property
-                // handle events
-                if (prop.substr(0,2) === 'on') {
-                  var eventName = prop.substr(2).toLowerCase();
-                  //node.addEventListener(eventName, value);
-                  this.listenTo(node, eventName, value);
-                  continue;
-                }
-                // handle everything else
-                switch (prop) {
-                  case 'text':
-                    node.textContent = value; break;
-                  case 'html':
-                    node.innerHTML = value; break;
-                  case 'visible':
-                  case 'display':
-                    node.style.display = value ? '' : 'none'; break;
-                  case 'class':
-                  case (typeof value === 'object'):
-                    for (var className in value) {
-                      if (value) node.classList.add(value[className]);
-                      else node.classList.remove(value[className]);
-                    } 
-                    break;
-                  default: node.setAttribute(prop, value);
-                }
-              }
-            }
-          }
+        if (nextNode instanceof Controller) {
+          if (nextNode !== prevNode) this.include(nextNode, node);
+          continue;
+        }
+        
+        for (var attr in nextNode) {
+          var value = nextNode[attr];
+          if (value !== prevNode[attr]) set.call(this, node, attr, value);
         }
       }
-      return DOM;
-    };
+      return next;
+    }
   }
 });
 
@@ -334,8 +294,8 @@ var List = extend(Controller, {
     this.controllers = [];
     this.init();
   },
-  init: function() {},
-  controller: function(item) {
+  init: noop,
+  controller: function() {
     throw "No controller generator specified!"; // this should be over-ridden
   },
   setView: function(view) {
@@ -343,7 +303,7 @@ var List = extend(Controller, {
 
     // if Controller is a class, set this.controller to a function that returns a new controller of that class
     // and use the first child element as the view
-    if (typeof this.controller.prototype.remove === 'function') {
+    if (isFunction(this.controller.prototype.remove)) {
       this.controller = function(Controller, view, model) {
         return new Controller({ view: view.cloneNode(true), model: model });
       }.bind(this, this.controller, this.view.children[0].cloneNode(true));
@@ -369,7 +329,7 @@ var List = extend(Controller, {
     controller.remove();
   },
   onChange: function(e) {
-    if (e.index === undefined) return this.render();
+    if (isUndefined(e.index)) return this.render();
     if (e.updated) return this.onUpdate(this.controllers[e.index], e.updated);
 
     var added = e.added.map(this.controller);
@@ -384,15 +344,8 @@ var List = extend(Controller, {
     // render into a documentFragment for speed
     var view = document.createDocumentFragment();
     var oldControllers = this.controllers;
-
-    this.controllers = this.collection.map(function(model) {
-      return this.controller(model);
-    }.bind(this));
-
-    this.controllers.forEach(function(controller) {
-      this.onAdd(view, controller);
-    }.bind(this));
-
+    this.controllers = this.collection.map(this.controller);
+    this.controllers.forEach(this.onAdd.bind(this, view));
     this.view.innerHTML = '';
     this.view.appendChild(view);
     oldControllers.forEach(this.onRemove);
@@ -400,20 +353,11 @@ var List = extend(Controller, {
 });
 
 module.exports = {
-  EventEmitter : EventEmitter, 
-  Model : Model, 
-  Collection : Collection, 
-  Controller : Controller, 
-  List: List, 
-  Utils: {
-    'mixin': mixin,
-    'extend' : extend,
-    'guid' : guid,
-    'isEqual' : isEqual,
-    'isNode' : isNode,
-    'isNumber' : isNumber,
-    'isArray' : isArray,
-    'isString' : isString,
-    'isObject' : isObject
-  }
-};
+  EventEmitter : EventEmitter,
+  Model : Model,
+  Collection : Collection,
+  Controller : Controller,
+  List: List,
+  assign: assign,
+  extend: extend
+}
