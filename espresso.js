@@ -319,6 +319,7 @@ var List = extend(Controller, {
     return this;
   },
   remove: function() {
+    this.stopListening();
     this.controllers.forEach(this.onRemove);
   },
   onAdd: function(view, controller, index) {

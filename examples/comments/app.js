@@ -1,5 +1,11 @@
+// Based on React's tutorial: 
+// http://facebook.github.io/react/docs/tutorial.html
+
 var Espresso = window.Espresso;
-var Model = Espresso.Model, Collection = Espresso.Collection, Controller = Espresso.Controller, List = Espresso.List;
+var Model = Espresso.Model;
+var Collection = Espresso.Collection;
+var Controller = Espresso.Controller;
+var List = Espresso.List;
 var extend = Espresso.extend;
 var converter = new window.Showdown.converter();
 
