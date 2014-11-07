@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-framework="javascript">
+	<head>
+		<meta charset="utf-8">
+		<title>Espresso.js • TodoMVC</title>
+		<link rel="stylesheet" href="app.css">
+	</head>
+	<body>
+		<section id="todoapp">
+			<header id="header">
+				<h1>todos</h1>
+				<input id="new-todo" data-ref="newItem" placeholder="What needs to be done?" autofocus>
+			</header>
+			<section id="main">
+				<input id="toggle-all" data-ref="toggleAll" type="checkbox">
+				<label for="toggle-all">Mark all as complete</label>
+				<ul id="todo-list" data-ref="list">
+					<li>
+						<div class="view">
+							<input class="toggle" data-ref="toggle" type="checkbox">
+							<label data-ref="label"></label>
+							<button data-ref="destroy" class="destroy"></button>
+						</div>
+						<input class="edit" data-ref="input">
+					</li>
+				</ul>
+			</section>
+			<footer id="footer" data-ref="footer">
+				<span id="todo-count" data-ref="count"></span>
+				<ul id="filters">
+					<li>
+						<a href="#/" class="selected">All</a>
+					</li>
+					<li>
+						<a href="#/active">Active</a>
+					</li>
+					<li>
+						<a href="#/completed">Completed</a>
+					</li>
+				</ul>
+				<button id="clear-completed" data-ref="clear">Clear completed</button>
+			</footer>
+		</section>
+		<footer id="info">
+			<p>Double-click to edit a todo</p>
+			<p>Created by <a href="https://github.com/akrymski">Artemi Krymski</a></p>
+			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+		</footer>
+		<script src="../../espresso.min.js"></script>
+		<script src="app.js"></script>
+	</body>
+</html>

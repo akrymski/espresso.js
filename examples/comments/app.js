@@ -13,6 +13,7 @@ var Comment = extend(Controller, {
 	removeComment: function(e) {
 		console.log('removing', this.model.id);
 		comments.remove({ id: this.model.id });
+		return false;
 	},
 	html: function() {
 		return converter.makeHtml(this.model.get('text'));
@@ -32,6 +33,7 @@ var CommentForm = extend(Controller, {
 		comments.push(comment);
 		e.target.reset();
 		console.log('added', comment);
+		return false;
 	},
 	render: function() {
 		return {

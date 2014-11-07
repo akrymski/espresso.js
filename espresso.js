@@ -100,7 +100,9 @@ var Collection = extend(Object, EventEmitter, {
   idAttribute: 'id', 
   constructor: function(items) {
     this.reset(items);
+    this.init();
   },
+  init: noop,
   count: function() {
     return this.items.length;
   },
@@ -152,6 +154,11 @@ var Collection = extend(Object, EventEmitter, {
   set: function(index, value) {
     if (index instanceof Collection) return this.setAll(index.toArray(), value);
     if (isArray(index)) return this.setAll(index, value);
+    if (isUndefined(value) && isObject(index)) {
+      index = this.index(index);
+      value = assign({}, this.items[index], arguments[0]);
+    }
+
     if (isEqual(this.items[index], value)) return;
 
     this.items[index] = value;
@@ -162,11 +169,22 @@ var Collection = extend(Object, EventEmitter, {
     this.splice(this.items.length, 0, obj);
   },
   remove: function(index) {
-    if (isObject(index)) index = this.find(index);
+    if (isObject(index)) index = this.index(index);
     this.splice(index, 1);
   },
-  // find index of matching object, eg: find({ id: 1 });
-  find: function(attr) {
+  id: function(id) {
+    return this.get(this.id(id));
+  },
+  index: function(id) {
+    var items = this.items, attr = this.idAttribute;
+    if (isObject(id)) id = id[attr];
+    for (var i = 0, len = items.length; i < len; i++) {
+      if (items[i][attr] === id) return i;
+    }
+    return -1;
+  },
+  // find index of matching object, eg: findIndex({ id: 1 });
+  findIndex: function(attr) {
     var items = this.items, isEqual = Model.prototype.isEqual;
     for (var i = 0, len = items.length; i < len; i++) {
       if (isEqual.call(items[i], attr)) return i;
@@ -247,9 +265,10 @@ var Controller = extend(Object, EventEmitter, {
     return controller;
   },
   setAttribute: function(node, attr, value) {
-    if (attr === 'text') node.textContent = value;
-    else if (attr === 'html') node.innerHTML = value;
+    if (attr === 'text') node.textContent = value || '';
+    else if (attr === 'html') node.innerHTML = value || '';
     else if (attr === 'display') node.style.display = value ? '' : 'none';
+    else if (attr === 'checked') node.checked = value;
     else if (attr === 'class' && isObject(value)) {
       for (var className in value) {
         if (value[className]) node.classList.add(className);
@@ -258,7 +277,7 @@ var Controller = extend(Object, EventEmitter, {
     } else if (attr.substr(0,2) === 'on') {
       var eventName = attr.substr(2).toLowerCase();
       this.listenTo(node, eventName, function(fn, e) {
-        if (fn.call(this, e) !== true && e.preventDefault) e.preventDefault();
+        if (fn.call(this, e) === false && e.preventDefault) e.preventDefault();
       }.bind(this, value));
     } else node.setAttribute(attr, value);
   },
