@@ -19,9 +19,6 @@ var ToDoStore = extend(Collection, {
         this.push({ done: false, id: this.count(), text: txt })
     },
     toggle: function(id, done) {
-        // var index = this.findIndex({ id: id });
-        // var item = this.get(index);
-        // this.set(index, { done: done, id: item.id, text: item.text })
         this.set({ id: id, done: done })
     },
     toggleAll: function(done) {
