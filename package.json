@@ -1,11 +1,8 @@
 {
   "name": "espresso.js",
-  "description": "Generate Backbone-style documentation from Markdown",
+  "description": "Minimalistic MVC",
   "version": "0.0.1",
-  "dependencies": {
-    "marked": "~0.3.2",
-    "commander": "~2.5.0"
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/techlayer/espresso.js"
