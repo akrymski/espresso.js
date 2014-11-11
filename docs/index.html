@@ -558,7 +558,10 @@ The callback function is automatically bound to the controller for you, so <code
 <h3><a name="collections/get" class="anchor" href="#collections/get">get </a><code>get(index); get({ id: 1 })</code><span class="ac">¶</span></h3><p>Returns an item from the collection at the specified index or matching the given object</p>
 <h3><a name="collections/set" class="anchor" href="#collections/set">set </a><code>set(index, item)</code><span class="ac">¶</span></h3><p>Sets an item in the collection.  Alternatively an item in the collection with <code>id = 1</code> can be updated as follows:</p>
 <pre><code>set({ id: 1, value: 2 })
-</code></pre><h3><a name="collections/reset" class="anchor" href="#collections/reset">reset </a><code>reset([ ... ])</code><span class="ac">¶</span></h3><p>Resets all the items in the collection.</p>
+</code></pre><p>Or you can set all items in the collection as follows:</p>
+<pre><code>set([ ... ], [idAttribute])
+</code></pre><p>which performs a <em>smart update</em> of the collection by performing <code>splice</code> operations in order to arrive at the target set.</p>
+<h3><a name="collections/reset" class="anchor" href="#collections/reset">reset </a><code>reset([ ... ])</code><span class="ac">¶</span></h3><p>Resets all the items in the collection.</p>
 <h3><a name="collections/findindex" class="anchor" href="#collections/findindex">findIndex </a><code>findIndex({ id: 1 })</code><span class="ac">¶</span></h3><p>Returns the index of matching item in the collection or <code>-1</code></p>
 <h3><a name="collections/find" class="anchor" href="#collections/find">find </a><code>find({ id: 1})</code><span class="ac">¶</span></h3><p>Returns the matching item in the collection or <code>undefined</code></p>
 <h3><a name="collections/remove" class="anchor" href="#collections/remove">remove </a><code>remove(index); remove({ id: 1 })</code><span class="ac">¶</span></h3><p>Removes an item from the collection</p>

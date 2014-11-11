@@ -175,6 +175,14 @@ Sets an item in the collection.  Alternatively an item in the collection with `i
 set({ id: 1, value: 2 })
 ```
 
+Or you can set all items in the collection as follows:
+
+```
+set([ ... ], [idAttribute])
+```
+
+which performs a *smart update* of the collection by performing `splice` operations in order to arrive at the target set.
+
 ### reset `reset([ ... ])`
 Resets all the items in the collection.
 
