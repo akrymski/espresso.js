@@ -20,5 +20,10 @@
     "mvc"
   ],
   "author": "Artemi Krymski <artemi@krymski.com> (http://krymski.com/)",
-  "license": "MIT"
+  "license": "MIT",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "test"
+  }
 }
