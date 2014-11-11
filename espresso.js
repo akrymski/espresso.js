@@ -1,14 +1,21 @@
 var animate = window.requestAnimationFrame || function(cb) { window.setTimeout(cb, 0); };
 var slice = Array.prototype.slice;
 var splice = Array.prototype.splice;
+var toString = Object.prototype.toString;
 var noop = function() {};
 var isUndefined = function(arg) { return arg === void 0 };
-var isFunction = function(x) { return typeof x === 'function' };
-var isNumber = function(x) { return typeof x === 'number' };
-var isObject = function(x) { return typeof x === 'object' && x !== null };
-var isString = function(x) { return typeof x === 'string' };
+var isFunction = function(x) { return toString.call(x) === '[object Function]'; };
+// Optimize `isFunction` if appropriate. Work around an IE 11 bug.
+if (typeof /./ !== 'function') {
+    func = function isFunction(x) {
+      return typeof x == 'function' || false;
+    };
+}
+var isNumber = function(x) { return toString.call(x) === '[object Number]'; };
+var isObject = function(x) { var type = typeof x; return !!x && (type === 'function' || type === 'object'); };
+var isString = function(x) { return toString.call(x) === '[object String]'; };
 var isNode = function(x) { return x && x.nodeType > 0 };
-var isArray = Array.isArray;
+var isArray = function(x) { return toString.call(x) === '[object Array]'; };
 var toObject = function(key, val) { var x = {}; x[key] = val; return x };
 var assign = function(o) {
   for (var i = 1, a = arguments, len = a.length; i < len; i++) {
