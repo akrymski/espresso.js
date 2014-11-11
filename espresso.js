@@ -1,3 +1,4 @@
+var animate = window.requestAnimationFrame || function(cb) { window.setTimeout(cb, 0); };
 var slice = Array.prototype.slice;
 var splice = Array.prototype.splice;
 var noop = function() {};
@@ -54,9 +55,11 @@ var EventEmitter = {
     if (listeners) listeners.splice(listeners.indexOf(fn), 1);
   },
   emit : function(name) {
-    var listeners = this._listeners || (this._listeners = {});
-    var args = slice.call(arguments, 1);
-    (listeners[name] || []).forEach(function(h) { h.apply(this, args); }.bind(this));
+    var listeners = (this._listeners || {})[name];
+    if (listeners) {
+      var args = slice.call(arguments, 1);
+      listeners.forEach(function(h) { h.apply(this, args); }.bind(this));
+    }
   }
 };
 
@@ -169,7 +172,10 @@ var Collection = extend(Object, EventEmitter, {
     return this;
   },
   push: function(obj) {
-    this.splice(this.items.length, 0, obj);
+    for (var i = 0, len = arguments.length; i < len; i++) {
+      this.splice(this.items.length, 0, arguments[i]);
+    }
+    return this.items.length;
   },
   remove: function(index) {
     if (isObject(index)) index = this.findIndex(index);
@@ -193,6 +199,7 @@ var Collection = extend(Object, EventEmitter, {
     var removed = splice.apply(this.items, arguments);
     var added = slice.call(arguments, 2);
     this.emit('change', { added: added, removed: removed, index: index });
+    return removed;
   },
   toArray: function() {
     return this.items;
@@ -282,25 +289,29 @@ var Controller = extend(Object, EventEmitter, {
   },
   _wrap: function(fn) {
     return function() {
-      var set = this.setAttribute;
+      var set = this.setAttribute, refs = this.ref, include = this.include;
       var prev = this.DOM || {};
       var next = this.DOM = fn.call(this);
       if (!isObject(next)) return;
-      for (var ref in next) {
-        var node = this.ref[ref];
-        if (isUndefined(node)) throw "Invalid data-ref name specified";
-        var nextNode = next[ref], prevNode = prev[ref] || {};
 
-        if (nextNode instanceof Controller) {
-          if (nextNode !== prevNode) this.include(nextNode, node);
-          continue;
+      animate(function() {
+        for (var ref in next) {
+          var node = refs[ref];
+          if (isUndefined(node)) throw "Invalid data-ref name specified";
+          var nextNode = next[ref], prevNode = prev[ref] || {};
+
+          if (nextNode instanceof Controller) {
+            if (nextNode !== prevNode) include(nextNode, node);
+            continue;
+          }
+          
+          for (var attr in nextNode) {
+            var value = nextNode[attr];
+            if (value !== prevNode[attr]) set.call(this, node, attr, value);
+          }
         }
-        
-        for (var attr in nextNode) {
-          var value = nextNode[attr];
-          if (value !== prevNode[attr]) set.call(this, node, attr, value);
-        }
-      }
+      }.bind(this))
+      
       return next;
     }
   }
@@ -383,5 +394,6 @@ module.exports = {
   Controller : Controller,
   List: List,
   assign: assign,
-  extend: extend
+  extend: extend,
+  isEqual: isEqual
 }

@@ -12,6 +12,9 @@
     "evil": true,
     "eqnull": true,
     "globals": {
-        "console": true
+        "console": true,
+        "describe": true,
+        "it": true,
+        "Espresso": true
     }
 }

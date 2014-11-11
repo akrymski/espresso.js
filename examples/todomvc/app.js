@@ -1,5 +1,6 @@
 // todomvc
-var Espresso    = window.Espresso
+// https://github.com/tastejs/todomvc
+
 var Model       = Espresso.Model
 var Collection  = Espresso.Collection
 var Controller  = Espresso.Controller
