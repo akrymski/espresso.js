@@ -72,7 +72,7 @@ var ToDoItem = extend(Controller, {
     },
     render: function() {
         return {
-            view: { 'class': { editing: this.model.editing, completed: this.model.done } },
+            view: { classList: { editing: this.model.editing, completed: this.model.done } },
             label: { ondblclick: this.edit, text: this.model.text },
             destroy: { onclick: this.destroy },
             input: { value: this.model.text, onkeydown: this.key },
