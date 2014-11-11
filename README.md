@@ -25,13 +25,13 @@ Now dive in and check out the [To-Do Example](https://github.com/techlayer/espre
 
 Backbone style docs can be found [here](https://cdn.rawgit.com/techlayer/espresso.js/master/docs/index.html)
 
-## Testing
+### Testing
 
 ``` bash
 $ mocha
 ```
 
-## Building
+### Building
 
 If you need to use this module outside a CommonJS environment, 
 you can build a standalone UMD module as follows:
