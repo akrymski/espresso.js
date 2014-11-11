@@ -1,0 +1,596 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>Espresso.js</title>
+  <style>
+    html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
+    pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small,
+    strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label,
+    legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside,
+    canvas, details, figcaption, figure, footer, header, hgroup, menu, nav,
+    section, summary, time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        background: transparent;
+    }
+
+    body {
+        line-height: 1;
+    }
+
+    article, aside, details, figcaption, figure, footer, header, hgroup,
+    menu, nav, section {
+        display: block;
+    }
+
+    nav ul {
+        list-style: none;
+    }
+
+    blockquote, q {
+        quotes: none;
+    }
+
+    blockquote:before, blockquote:after, q:before, q:after {
+        content: '';
+        content: none;
+    }
+
+    a {
+        margin: 0;
+        padding: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        background: transparent;
+    }
+
+    ins {
+        background-color: #ff9;
+        color: #000;
+        text-decoration: none;
+    }
+
+    mark {
+        background-color: #ff9;
+        color: #000;
+        font-style: italic;
+        font-weight: bold;
+    }
+
+    del {
+        text-decoration: line-through;
+    }
+
+    abbr[title], dfn[title] {
+        border-bottom: 1px dotted;
+        cursor: help;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #cccccc;
+        margin: 1em 0;
+        padding: 0;
+    }
+
+    input, select {
+        vertical-align: middle;
+    }
+
+    .pln {
+        color: #000000;
+    }
+
+    @media screen {
+        .str {
+            color: #008800;
+        }
+
+        .kwd {
+            color: #000088;
+        }
+
+        .com {
+            color: #880000;
+        }
+
+        .typ {
+            color: #660066;
+        }
+
+        .lit {
+            color: #006666;
+        }
+
+        .pun, .opn, .clo {
+            color: #666600;
+        }
+
+        .tag {
+            color: #000088;
+        }
+
+        .atn {
+            color: #660066;
+        }
+
+        .atv {
+            color: #008800;
+        }
+
+        .dec, .var {
+            color: #660066;
+        }
+
+        .fun {
+            color: #ff0000;
+        }
+    }
+
+    @media print, projection {
+        .str {
+            color: #006600;
+        }
+
+        .kwd {
+            color: #006;
+            font-weight: bold;
+        }
+
+        .com {
+            color: #600;
+            font-style: italic;
+        }
+
+        .typ {
+            color: #404;
+            font-weight: bold;
+        }
+
+        .lit {
+            color: #004444;
+        }
+
+        .pun, .opn, .clo {
+            color: #444400;
+        }
+
+        .tag {
+            color: #006;
+            font-weight: bold;
+        }
+
+        .atn {
+            color: #440044;
+        }
+
+        .atv {
+            color: #006600;
+        }
+    }
+
+    pre.prettyprint {
+        padding: 2px;
+        border: 1px solid #888888;
+    }
+
+    body {
+        color: #000;
+        font-family: Helvetica Neue, Helvetica, Arial;
+        font-size: 14px;
+        line-height: 22px;
+        background: #fff;
+    }
+
+    #container {
+        margin: 0px 0px 0px 230px;
+        padding: 30px 50px;
+        position: relative;
+    }
+
+    #sidebar {
+        box-shadow: inset 0 0px 20px #bfdcf5;
+        -moz-box-shadow: inset 0 0px 20px #bfdcf5;
+        -webkit-box-shadow: inset 0 0px 20px #bfdcf5;
+        border-right: 1px solid #a8cff2;
+        background: #ebf4fc;
+        font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif !important;
+        bottom: 0;
+        left: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 15px 0 30px 30px;
+        position: fixed;
+        top: 0;
+        -webkit-overflow-scrolling: touch;
+        width: 200px;
+    }
+
+    a, a:visited {
+      color: #0081eb;
+    }
+
+    a:hover {
+        color: #1f9aff;
+    }
+
+    h1 a, h2 a, h3 a, h4 a, h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover {
+      text-decoration: none;
+      color: #000;
+    }
+
+    h1 code, h2 code, h3 code, h4 code {
+      font-weight: normal;
+      font-size: 12px;
+      padding-left: 10px;
+    }
+
+    span.ac {
+      visibility: hidden;
+      cursor: pointer;
+      padding-left: 10px;
+      color: #ccc;
+    }
+
+    h2:hover span.ac, h3:hover span.ac {
+      visibility: visible;
+    }
+
+    #sidebar h1, #sidebar h2, #sidebar h3 {
+        text-decoration: underline;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+    }
+
+    #sidebar h1:hover, #sidebar h2:hover, #sidebar h3:hover {
+        color: #0081eb;
+    }
+
+    #sidebar h1 {
+        font-size: 16px;
+        line-height: 30px;
+        padding-top: 10px;
+    }
+
+    #sidebar h2 {
+        font-size: 14px;
+        line-height: 30px;
+        padding-top: 10px;
+    }
+
+    #sidebar h3 {
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: normal;
+        padding: 0;
+        line-height: 17px;
+    }
+
+    div.container:focus {
+        outline: none;
+    }
+
+    * {
+        outline: none;
+    }
+
+    #doc p, #doc blockquote, #doc h1, #doc h2, #doc h3, #doc h4, #doc h5, #doc h6,
+    #doc table, #doc pre, #doc code, #doc ul, #doc ol, #doc img {
+        margin: 5px 0;
+    }
+
+    #doc hr {
+        border-color: #bfdcf5;
+    }
+
+    #doc ul, #doc ol {
+        padding-left: 30px;
+    }
+
+    #doc h1 {
+        font-size: 28px;
+        margin: 10px 0 20px 0;
+    }
+
+    #doc h2 {
+        font-size: 23px;
+        margin: 40px 0 5px 0;
+    }
+
+    #doc h3 {
+        font-size: 18px;
+        margin: 20px 0 4px 0;
+    }
+
+    #doc table {
+        border-collapse: collapse;
+        width: 100%;
+        padding: 10px;
+        margin: 4px 0 10px 0;
+        padding: 0;
+    }
+
+    #doc thead {
+        background: transparent;
+        border-bottom: 3px solid #bfdcf5;
+    }
+
+    #doc table tbody {
+        background: #ebf4fc;
+    }
+
+    #doc table td {
+        border: 1px solid #bfdcf5;
+    }
+
+    #doc tr, #doc td {
+        margin: 0;
+        padding: 0;
+    }
+
+    #doc td, #doc th {
+        padding: 4px 8px;
+    }
+
+    #doc td * {
+        margin: 0;
+        background: #ebf4fc;
+    }
+
+    #doc table .rule {
+        background: #ccc;
+        height: 1px;
+        margin: 5px 0;
+    }
+
+    #doc ul {
+        list-style-type: circle;
+    }
+
+    #doc code, #doc pre, #doc tt {
+        font-family: Monaco, Consolas, "Lucida Console", monospace;
+        font-size: 12px;
+        font-style: normal;
+        line-height: 18px;
+    }
+
+    #doc pre, #doc pre, #doc blockquote {
+        border: 0;
+        background: #ebf4fc;
+        border-left: 3px solid #bfdcf5;
+        font-size: 12px;
+        padding: 6px 12px;
+        margin: 10px 0;
+    }
+
+    #doc blockquote {
+        padding: 4px 15px;
+        font-size: 13px;
+    }
+
+    #doc ol.linenums {
+        color: #999;
+        font-size: 10px;
+        padding-left: 30px;
+    }
+
+    #doc button, #doc a.button, #doc a.button:visited {
+        -webkit-user-select: none;
+        background: #fff;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 32, 0.01)), to(rgba(0, 0, 32, 0.08)));
+        background-image: -moz-linear-gradient(rgba(0, 0, 32, 0.01), rgba(0, 0, 32, 0.08));
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        color: #202028;
+        padding: 4px 10px;
+        border: 1px solid #a8a8af;
+        text-decoration: none !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        line-height: 19px;
+        font-family: helvetica, arial, sans-serif;
+        display: inline-block;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    #doc button:hover, #doc a.button:hover {
+        color: #202028;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 32, 0.01)), to(rgba(0, 0, 32, 0.16)));
+        background-image: -moz-linear-gradient(rgba(0, 0, 32, 0.01), rgba(0, 0, 32, 0.16));
+        border-color: #707078;
+    }
+
+    #doc button:active, #doc a.button:active {
+        background-color: rgba(0, 0, 32, 0.05);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 32, 0.16)), to(rgba(0, 0, 32, 0.01)));
+        background-image: -moz-linear-gradient(rgba(0, 0, 32, 0.16), rgba(0, 0, 32, 0.01));
+        box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    @media print {
+        #sidebar {
+            display: none;
+        }
+
+        #container {
+            margin: 0;
+        }
+
+        body {
+            background: #fff;
+        }
+    }
+
+    @media only screen and (max-width:640px) {
+        img {
+            max-width: 100%;
+        }
+
+        #sidebar {
+            -webkit-overflow-scrolling: initial;
+            position: fixed;
+            top: 0;
+            right: 100px;
+            left: 0;
+            bottom: 0;
+            display: none;
+            z-index: 99;
+            height: auto;
+            width: auto;
+            box-shadow: 0 0px 20px #3a92e1;
+            -moz-box-shadow: 0 0px 20px #3a92e1;
+            -webkit-box-shadow: 0 0px 20px #3a92e1;
+        }
+
+        #container, #editor {
+            margin: 0;
+            padding: 10px 20px;
+        }
+
+        pre {
+            overflow: scroll;
+        }
+    }
+
+  </style>
+</head>
+<body>
+<div id="sidebar"><h1><a href="#espresso-js">Espresso.js</a></h1><h3><a href="#features"> - Features</a></h3><h3><a href="#getting-started"> - Getting Started</a></h3><h2><a href="#views">Views</a></h2><h3><a href="#views/data-ref"> - data-ref</a></h3><h2><a href="#controllers">Controllers</a></h2><h3><a href="#controllers/constructor"> - constructor </a></h3><h3><a href="#controllers/init"> - init </a></h3><h3><a href="#controllers/ref"> - ref</a></h3><h3><a href="#controllers/view"> - view</a></h3><h3><a href="#controllers/model"> - model</a></h3><h3><a href="#controllers/include"> - include </a></h3><h3><a href="#controllers/remove"> - remove </a></h3><h3><a href="#controllers/listento"> - listenTo </a></h3><h3><a href="#controllers/stoplistening"> - stopListening </a></h3><h3><a href="#controllers/setview"> - setView </a></h3><h3><a href="#controllers/set"> - set </a></h3><h3><a href="#controllers/render"> - render</a></h3><h2><a href="#models">Models</a></h2><h3><a href="#models/constructor"> - constructor </a></h3><h3><a href="#models/defaults"> - defaults</a></h3><h3><a href="#models/set"> - set </a></h3><h3><a href="#models/get"> - get </a></h3><h3><a href="#models/toobject"> - toObject</a></h3><h2><a href="#collections">Collections</a></h2><h3><a href="#collections/constructor"> - constructor </a></h3><h3><a href="#collections/idattribute"> - idAttribute </a></h3><h3><a href="#collections/count"> - count </a></h3><h3><a href="#collections/get"> - get </a></h3><h3><a href="#collections/set"> - set </a></h3><h3><a href="#collections/reset"> - reset </a></h3><h3><a href="#collections/findindex"> - findIndex </a></h3><h3><a href="#collections/find"> - find </a></h3><h3><a href="#collections/remove"> - remove </a></h3><h3><a href="#collections/array-methods"> - Array methods</a></h3><h2><a href="#lists">Lists</a></h2><h3><a href="#lists/constructor"> - constructor </a></h3><h3><a href="#lists/set"> - set </a></h3><h3><a href="#lists/reset"> - reset </a></h3><h2><a href="#eventemitter">EventEmitter</a></h2><h3><a href="#eventemitter/addlistener"> - addListener </a></h3><h3><a href="#eventemitter/removelistener"> - removeListener </a></h3><h3><a href="#eventemitter/emit"> - emit </a></h3><h2><a href="#examples">Examples</a></h2><h3><a href="#examples/comments"> - Comments</a></h3><h3><a href="#examples/todomvc"> - ToDoMVC</a></h3></div>
+<div id="container"><div id="doc"><h1><a name="espresso-js" class="anchor" href="#espresso-js">Espresso.js</a><span class="ac">¶</span></h1><p>Espresso.js is a tiny MVC framework inspired by <a href="http://backbonejs.org">Backbone</a> and <a href="http://facebook.github.io/react/">React</a> with a focus on simplicity and speed.</p>
+<p>We&#39;ve aimed to bring the ideas of unidirectional data flow of <a href="http://facebook.github.io/flux/docs/overview.html">Flux</a> to a simple, Backbone-style library.</p>
+<h3><a name="features" class="anchor" href="#features">Features</a><span class="ac">¶</span></h3><ul>
+<li>tiny, less than 500 lines and 3kb gzipped</li>
+<li>zero dependencies</li>
+<li>performance and memory focused</li>
+<li>does not aim to support anything below IE10, but may work on older browsers using a <a href="https://github.com/termi/ES5-DOM-SHIM">shim</a></li>
+</ul>
+<h3><a name="getting-started" class="anchor" href="#getting-started">Getting Started</a><span class="ac">¶</span></h3><p>If you&#39;re using Browserify or Node/CommonJS, simply install the package:</p>
+<p><code>$ sudo npm install --save espresso.js</code></p>
+<p>Alternatively grab the <a href="https://raw.githubusercontent.com/techlayer/espresso.js/master/espresso.min.js?token=AAamF6ZPKrH6WZ5pN6wwM4QtQphAdmbLks5Ua2ecwA%3D%3D">standalone version</a> that you can import with a <code>&lt;script&gt;</code> tag or checkout the <a href="https://github.com/techlayer/espresso.js">GitHub Repo</a>.</p>
+<p>Now dive in and check out the <a href="https://github.com/techlayer/espresso.js/tree/master/examples/todomvc">To-Do Example</a> app.</p>
+<h2><a name="views" class="anchor" href="#views">Views</a><span class="ac">¶</span></h2><p>A view is a DOM Node.  For example:</p>
+<pre><code>&lt;div class=&quot;commentBox&quot;&gt;
+  &lt;h1&gt;Comments&lt;/h1&gt;
+  &lt;div data-ref=&quot;commentList&quot;&gt; 
+      &lt;div data-ref=&quot;comment&quot;&gt;
+          &lt;a style=&quot;float:right&quot; href=&quot;#&quot; data-ref=&quot;remove&quot;&gt;[x]&lt;/a&gt;
+          &lt;h2 data-ref=&quot;author&quot;&gt;&lt;/h2&gt;
+          &lt;span data-ref=&quot;html&quot;&gt;&lt;/span&gt;
+      &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p>Being a DOM node, there&#39;s no string interpolation to be done at runtime, nor does the browser need to parse the HTML from a string.  It also means designers can actually mockup a site which you can make interactive without messing with templating languages.</p>
+<h3><a name="views/data-ref" class="anchor" href="#views/data-ref">data-ref</a><span class="ac">¶</span></h3><p>A <code>data-ref</code> is a special attribute that allows us to refer to that <code>node</code> by name in the <code>Controller</code>.  </p>
+<h2><a name="controllers" class="anchor" href="#controllers">Controllers</a><span class="ac">¶</span></h2><p>A controller is the mediator between model and view.  You can extend the controller using tranditional JavaScript prototype inheritance, or use the built-in <code>extend</code> method:</p>
+<pre><code>var Comment = Espresso.extend(Espress.Controller, {
+  init: function(options) { ... }
+})
+</code></pre><h3><a name="controllers/constructor" class="anchor" href="#controllers/constructor">constructor </a><code>new Controller(view, options)</code><span class="ac">¶</span></h3><p>Options over-ride anything defined on the class.</p>
+<p>If <code>options.view</code> is a DOM node, then the controller is bound to that node.</p>
+<p>If a <code>string</code> is specified instead, then it is used to locate the DOM node by ID and clone its first child.  This is <a href="http://jsperf.com/innerclone">much faster</a> than doing templating and parsing templates using <code>innerHTML</code>.</p>
+<h3><a name="controllers/init" class="anchor" href="#controllers/init">init </a><code>init(options)</code><span class="ac">¶</span></h3><p>Gets called automatically as soon as the controller is bound to a view, and gets passed <code>options</code>.</p>
+<h3><a name="controllers/ref" class="anchor" href="#controllers/ref">ref</a><span class="ac">¶</span></h3><p>Object containing all DOM nodes with <code>data-ref</code> attribute, keyed by name.  Faster than doing <code>view.querySelector</code> as all nodes with <code>ref</code> attribute are fetched just once when the controller is initialised.</p>
+<pre><code>this.ref.author.textContent = &#39;hello world&#39;
+</code></pre><h3><a name="controllers/view" class="anchor" href="#controllers/view">view</a><span class="ac">¶</span></h3><p>The view property refers to the view DOM Element</p>
+<h3><a name="controllers/model" class="anchor" href="#controllers/model">model</a><span class="ac">¶</span></h3><p>Model property refers to the Model instance backing the controller.  Whenever the model changes, the controller&#39;s <code>render</code> method is called automatically.</p>
+<h3><a name="controllers/include" class="anchor" href="#controllers/include">include </a><code>include(controller, [view])</code><span class="ac">¶</span></h3><p>Add child controllers and views:</p>
+<pre><code>var page = this.include(new PageController(&#39;page-view&#39;, { name: &#39;Page 1&#39; }), this.ref.page);
+</code></pre><p>If a <code>view</code> node is specified, the child controller will have its view set to that node at the same time.</p>
+<h3><a name="controllers/remove" class="anchor" href="#controllers/remove">remove </a><code>remove()</code><span class="ac">¶</span></h3><p>Removes the view and any included controllers, and removes any listeners attached with <code>listenTo</code></p>
+<h3><a name="controllers/listento" class="anchor" href="#controllers/listento">listenTo </a><code>listenTo(object, event, fn)</code><span class="ac">¶</span></h3><p>The <code>listenTo</code> method of the controller lets you listen to events raised by other objects:</p>
+<pre><code>this.listenTo(this.model, &#39;change&#39;, function() { ... })
+this.listenTo(document.body, &#39;click&#39;, function() { ... })
+</code></pre><p>Target objects must provide on of the following method forms: <code>addListener</code> <code>addEventListener</code> <code>on</code>.
+The callback function is automatically bound to the controller for you, so <code>this</code> should refer to the controller instance unless you bind it to something else ahead of time.</p>
+<h3><a name="controllers/stoplistening" class="anchor" href="#controllers/stoplistening">stopListening </a><code>stopListening(object, event)</code><span class="ac">¶</span></h3><p>Stops listening to particular object and/or event.</p>
+<h3><a name="controllers/setview" class="anchor" href="#controllers/setview">setView </a><code>setView(node)</code><span class="ac">¶</span></h3><p><code>setView</code> is called automatically as soon as the controller has a view specified either in the constructor options or when it&#39;s being included in <code>render</code>.  The function computers the <code>ref</code> property, calls <code>init</code>, <code>render</code> and then listens to model changes.</p>
+<p>You should not need to call <code>setView</code> manually.</p>
+<h3><a name="controllers/set" class="anchor" href="#controllers/set">set </a><code>set({ key: val })</code><span class="ac">¶</span></h3><p>Shortcut for <code>this.model.set</code></p>
+<h3><a name="controllers/render" class="anchor" href="#controllers/render">render</a><span class="ac">¶</span></h3><p>You should over-ride render with your own implementation that updates <code>this.view</code> node.  You can do this imperatively as in Backbone, or declaratively as follows:</p>
+<pre><code>render: function() {
+  return {
+    list: this.list.set(items),
+    view: { classList: { editing: this.model.editing, completed: this.model.done } },
+    label: { onclick: this.edit, text: &#39;click here&#39;, display: true },
+    input: { value: this.model.text, onkeydown: this.key },
+    toggle: { onclick: this.toggle, checked: this.model.done }
+    count: { html: &#39;&lt;strong&gt;&#39;+store.active().length+&#39;&lt;/strong&gt; items left&#39; },
+  }
+}
+</code></pre><p>If your render function returns an <code>Object</code>, Espresso assumes that the object represents current state of <code>this.view</code> and peforms the required updates to the DOM after diff-ing against previous DOM object returned by <code>render</code>.  The declarative form specifies the name of the node on the left (as per the <code>data-ref</code> property) and attributes of that node on the right.  If the name maps to a controller instance, the controller is added as a <strong>child</strong> with that node as its <code>view</code>.  Apart from HTML attributes, some attributes offer special features:</p>
+<ul>
+<li><code>on[event]</code> - binds an event handler to that node</li>
+<li><code>classList: { className: true|false }</code> - specifies which <em>classes</em> the node should have</li>
+<li><code>display: true|false</code> - whether to display the node</li>
+<li><code>text</code> - sets the textContent of the node</li>
+<li><code>html</code> - sets the innerHTML content of the node</li>
+<li><code>checked</code> - sets the checked value of a checkbox</li>
+</ul>
+<h2><a name="models" class="anchor" href="#models">Models</a><span class="ac">¶</span></h2><p>Models are thin wrappers over objects providing getters and setters and firing <code>change</code> events.  Note that getters are optional (if you wish to make use of the <code>defaults</code>) but <code>set</code> must be called in order to fire a <code>change</code> event.</p>
+<h3><a name="models/constructor" class="anchor" href="#models/constructor">constructor </a><code>new Model({ key: val })</code><span class="ac">¶</span></h3><p>Creates a new model with specified attributes</p>
+<h3><a name="models/defaults" class="anchor" href="#models/defaults">defaults</a><span class="ac">¶</span></h3><p>This property is used to set the default properties of the model, which are used when <code>get</code> is called.</p>
+<h3><a name="models/set" class="anchor" href="#models/set">set </a><code>set({ key: val }); set(key, val)</code><span class="ac">¶</span></h3><p>Sets new values on the model and fires a <code>change</code> event if necessary.  Since changing the model will cause the controller to re-render, you should aim to set all required properties in one <code>set()</code> call.</p>
+<h3><a name="models/get" class="anchor" href="#models/get">get </a><code>get(attr)</code><span class="ac">¶</span></h3><p><code>attr</code> can be a function name or attribute name</p>
+<h3><a name="models/toobject" class="anchor" href="#models/toobject">toObject</a><span class="ac">¶</span></h3><p>returns the model attributes as a pure object.</p>
+<h2><a name="collections" class="anchor" href="#collections">Collections</a><span class="ac">¶</span></h2><p>Collections are thin wrappers over native arrays and fire a <code>change</code> method when they have been modified.  The <code>change</code> method specifies the <code>index</code> and which elements have been added, removed and updated.</p>
+<pre><code>this.listenTo(collection, function(e) {
+  console.log(e.index, e.added, e.removed, e.updated)
+})
+</code></pre><h3><a name="collections/constructor" class="anchor" href="#collections/constructor">constructor </a><code>new Collection([ .. ])</code><span class="ac">¶</span></h3><p>Creates a new collection with specified items</p>
+<h3><a name="collections/idattribute" class="anchor" href="#collections/idattribute">idAttribute </a><code>defaults to &quot;id&quot;</code><span class="ac">¶</span></h3><p>This property is used to find and update items by their primary key.</p>
+<h3><a name="collections/count" class="anchor" href="#collections/count">count </a><code>count()</code><span class="ac">¶</span></h3><p>Returns the number of items in the collection</p>
+<h3><a name="collections/get" class="anchor" href="#collections/get">get </a><code>get(index); get({ id: 1 })</code><span class="ac">¶</span></h3><p>Returns an item from the collection at the specified index or matching the given object</p>
+<h3><a name="collections/set" class="anchor" href="#collections/set">set </a><code>set(index, item)</code><span class="ac">¶</span></h3><p>Sets an item in the collection.  Alternatively an item in the collection with <code>id = 1</code> can be updated as follows:</p>
+<pre><code>set({ id: 1, value: 2 })
+</code></pre><h3><a name="collections/reset" class="anchor" href="#collections/reset">reset </a><code>reset([ ... ])</code><span class="ac">¶</span></h3><p>Resets all the items in the collection.</p>
+<h3><a name="collections/findindex" class="anchor" href="#collections/findindex">findIndex </a><code>findIndex({ id: 1 })</code><span class="ac">¶</span></h3><p>Returns the index of matching item in the collection or <code>-1</code></p>
+<h3><a name="collections/find" class="anchor" href="#collections/find">find </a><code>find({ id: 1})</code><span class="ac">¶</span></h3><p>Returns the matching item in the collection or <code>undefined</code></p>
+<h3><a name="collections/remove" class="anchor" href="#collections/remove">remove </a><code>remove(index); remove({ id: 1 })</code><span class="ac">¶</span></h3><p>Removes an item from the collection</p>
+<h3><a name="collections/array-methods" class="anchor" href="#collections/array-methods">Array methods</a><span class="ac">¶</span></h3><p>Available array methods are:</p>
+<ul>
+<li>push</li>
+<li>splice</li>
+<li>indexOf</li>
+<li>forEach</li>
+<li>map</li>
+<li>filter</li>
+</ul>
+<h2><a name="lists" class="anchor" href="#lists">Lists</a><span class="ac">¶</span></h2><p>A <code>List</code> provides a simple way to display an array of objects, and updates the DOM as necessary when objects are added, removed or updated.</p>
+<h3><a name="lists/constructor" class="anchor" href="#lists/constructor">constructor </a><code>new List(ControllerClass, [items])</code><span class="ac">¶</span></h3><p>Creates a new list of type <code>ControllerClass</code>, using each <code>item</code> as the model for the controller.  <code>ControllerClass</code> can also be a function that returns a controller <code>instance</code>:</p>
+<pre><code>new List(ToDoItem)
+new List(function(model) { new ToDoItem({ model: model }) })
+</code></pre><p>If <code>items</code> are passed in, they are used as the default items in the list.  <code>items</code> can also be an instance of a <code>Collection</code> class, in which the list binds directly to that collection.</p>
+<h3><a name="lists/set" class="anchor" href="#lists/set">set </a><code>set([ ... ])</code><span class="ac">¶</span></h3><p>Sets the items in the list, and returns the list.</p>
+<pre><code>render: function() {
+  init: function() {
+    this.todos = [ { text: &#39;shop&#39; }, { text: &#39;code&#39; } ]
+    this.list = new List(ToDoItem)
+  }
+  return {
+    todos: this.list.set(this.todos)
+  }
+}
+</code></pre><h3><a name="lists/reset" class="anchor" href="#lists/reset">reset </a><code>reset([...])</code><span class="ac">¶</span></h3><p>Delegates to <code>Collection.reset</code></p>
+<h2><a name="eventemitter" class="anchor" href="#eventemitter">EventEmitter</a><span class="ac">¶</span></h2><p>All classes mixin the <code>EventEmitter</code>, which is a tiny implementation of node&#39;s <a href="http://nodejs.org/api/events.html">equivalent module</a>.</p>
+<h3><a name="eventemitter/addlistener" class="anchor" href="#eventemitter/addlistener">addListener </a><code>addListener(event, fn)</code><span class="ac">¶</span></h3><h3><a name="eventemitter/removelistener" class="anchor" href="#eventemitter/removelistener">removeListener </a><code>removeListener(event, fn)</code><span class="ac">¶</span></h3><h3><a name="eventemitter/emit" class="anchor" href="#eventemitter/emit">emit </a><code>emit(event, [arg1], [arg2])</code><span class="ac">¶</span></h3><h2><a name="examples" class="anchor" href="#examples">Examples</a><span class="ac">¶</span></h2><h3><a name="examples/comments" class="anchor" href="#examples/comments">Comments</a><span class="ac">¶</span></h3><p>A <a href="https://github.com/techlayer/espresso.js/tree/master/examples/comments">comments example</a> based on the <a href="http://facebook.github.io/react/docs/tutorial.html">React tutorial</a></p>
+<h3><a name="examples/todomvc" class="anchor" href="#examples/todomvc">ToDoMVC</a><span class="ac">¶</span></h3><p>A simple <a href="https://github.com/techlayer/espresso.js/tree/master/examples/todomvc">to-do example</a> in 130 lines based on <a href="http://todomvc.com/">ToDoMVC</a></p>
+</div></div>
+</body>
+</html>
+

@@ -31,11 +31,11 @@ $ mocha
 ## Building
 
 If you need to use this module outside a CommonJS environment, 
-you can build a standaline UMD module as follows:
+you can build a standalone UMD module as follows:
 
 ``` bash
 npm install -g uglify-js
 npm install -g browserify
 
-$ browserify espresso.js --standalone espresso | uglifyjs > espresso.min.js
+$ browserify espresso.js --standalone Espresso | uglifyjs > espresso.min.js
 ```
