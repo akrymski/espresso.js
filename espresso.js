@@ -46,7 +46,8 @@ var isEqual = function(a, b) {
 };
 var getView = function(name) {
   var cache = window._view_cache || (window._view_cache = {});
-  return cache[name] || (cache[name] = document.getElementById(name));
+  var view = cache[name] || (cache[name] = document.getElementById(name));
+  return view.cloneNode(true);
 }
 var EventEmitter = {
   addListener: function(name, fn) {
