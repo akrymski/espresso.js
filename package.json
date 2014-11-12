@@ -25,5 +25,8 @@
     "doc": "docs",
     "example": "examples",
     "test": "test"
+  },
+  "spm": {
+    "main": "espresso.js"
   }
 }
