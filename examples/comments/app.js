@@ -6,10 +6,9 @@ var Model = Espresso.Model;
 var Collection = Espresso.Collection;
 var Controller = Espresso.Controller;
 var List = Espresso.List;
-var extend = Espresso.extend;
 var converter = new window.Showdown.converter();
 
-var Comment = extend(Controller, {
+var Comment = Controller.extend({
 	removeComment: function(e) {
 		console.log('removing', this.model.id);
 		comments.remove({ id: this.model.id });
@@ -27,7 +26,7 @@ var Comment = extend(Controller, {
 	}
 });
 
-var CommentForm = extend(Controller, {
+var CommentForm = Controller.extend({
 	save: function(e) {
 		var comment = { author: this.ref.author.value, text: this.ref.text.value, id: comments.count() };
 		comments.push(comment);
@@ -42,7 +41,7 @@ var CommentForm = extend(Controller, {
 	}
 });
 
-var CommentBox = extend(Controller, {
+var CommentBox = Controller.extend({
 	init: function() {
 		this.commentForm = new CommentForm();
 		this.list = new List(Comment, comments);

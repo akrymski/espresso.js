@@ -17,10 +17,11 @@ var assign = function(o) {
   return o;
 };
 var extend = function(parentClass, props) {
-  var child = function() { this.constructor.apply(this, arguments) };
-  child.prototype = Object.create(parentClass.prototype);
-  if (props) assign.apply(this, [ child.prototype ].concat(slice.call(arguments, 1)));
-  return child;
+  var child = function() { this.constructor.apply(this, arguments) }
+  child.extend = function(props) { return extend(this, props) }
+  child.prototype = Object.create(parentClass.prototype)
+  if (props) assign.apply(this, [ child.prototype ].concat(slice.call(arguments, 1)))
+  return child
 };
 var isEqual = function(a, b) {
   if (a === b) return true;

@@ -1,15 +1,13 @@
 // todomvc
 // https://github.com/tastejs/todomvc
 
-var Model       = Espresso.Model
 var Collection  = Espresso.Collection
 var Controller  = Espresso.Controller
 var List        = Espresso.List
-var extend      = Espresso.extend
 var ENTER_KEY   = 13;
 var ESC_KEY     = 27;
 
-var ToDoStore = extend(Collection, {
+var ToDoStore = Collection.extend({
     init: function() {
         this.clearCompleted = this.clearCompleted.bind(this);
         this.add = this.add.bind(this);
@@ -46,7 +44,7 @@ var ToDoStore = extend(Collection, {
     }
 });
 
-var ToDoItem = extend(Controller, {
+var ToDoItem = Controller.extend({
     init: function() {
         this.listenTo(window, 'click', function(e) {
             if (this.model.editing && e.target !== this.ref.input) {
@@ -82,7 +80,7 @@ var ToDoItem = extend(Controller, {
     }
 });
 
-var App = extend(Controller, {
+var App = Controller.extend({
     init: function() {
         this.model.filter = window.location.hash.replace('#/', '') || 'all';
         if (this.model.filter === 'active') this.filter({ target: this.ref.active });
