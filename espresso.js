@@ -44,6 +44,10 @@ var isEqual = function(a, b) {
   }
   return false;
 };
+var getView = function(name) {
+  var cache = window._view_cache || (window._view_cache = {});
+  return cache[name] || (cache[name] = document.getElementById(name));
+}
 var EventEmitter = {
   addListener: function(name, fn) {
     var listeners = this._listeners || (this._listeners = {});
@@ -222,6 +226,7 @@ var Controller = extend(Object, EventEmitter, {
   init: noop, // can override
   render: noop, // must override
   setView: function(view) {
+    if (isString(view)) view = getView(view);
     this.view = view;
     this._refs();
     this.init();
