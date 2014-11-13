@@ -116,7 +116,6 @@ var Model = extend(Object, EventEmitter, {
 
 // A collection holds an ordered number of Objects and provides helper methods like add, remove, get, filter, etc.
 // A collection also triggers a change event that a List can subscribe to directly
-// A collection creates GUIDs (or auto-increments) for objects by default
 var Collection = extend(Object, EventEmitter, {
   idAttribute: 'id', 
   constructor: function(items) {
@@ -229,6 +228,8 @@ var Collection = extend(Object, EventEmitter, {
   filter: function(fn) { return this.items.filter(fn) }
 });
 
+// A Controller is like Backbone's View or React's Component
+// It listens to model changes and updates the view
 var Controller = extend(Object, EventEmitter, {
   refAttribute: 'data-ref',
   constructor: function(options) {
@@ -337,8 +338,9 @@ var Controller = extend(Object, EventEmitter, {
   }
 });
 
+// A List listens to changes in the collection and updates itself
+// Every item in the list is an instance of the specified Controller
 var List = extend(Controller, {
-  // a collection is optional
   constructor: function(controller, collection) {
     this.controller = controller;
     this.collection = Array.isArray(collection || []) ? new Collection(collection) : collection;
