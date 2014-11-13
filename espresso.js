@@ -1,3 +1,16 @@
+/*
+                                                       ________        
+____________________________________________________   ______(_)_______
+_  _ \_  ___/__  __ \_  ___/  _ \_  ___/_  ___/  __ \  _____  /__  ___/
+/  __/(__  )__  /_/ /  /   /  __/(__  )_(__  )/ /_/ /______  / _(__  ) 
+\___//____/ _  .___//_/    \___//____/ /____/ \____/_(_)__  /  /____/  
+            /_/                                        /___/           
+
+Designed, built, and released under MIT license by @akrymski. Learn more at
+https://github.com/techlayer/espresso.js
+
+*/
+
 var animate = window.requestAnimationFrame || function(cb) { window.setTimeout(cb, 0); };
 var slice = Array.prototype.slice;
 var splice = Array.prototype.splice;
