@@ -498,19 +498,20 @@
 </code></pre><p>Being a DOM node, there&#39;s no string interpolation to be done at runtime, nor does the browser need to parse the HTML from a string.  It also means designers can actually mockup a site which you can make interactive without messing with templating languages.</p>
 <h3><a name="views/data-ref" class="anchor" href="#views/data-ref">data-ref</a><span class="ac">¶</span></h3><p>A <code>data-ref</code> is a special attribute that allows us to refer to that <code>node</code> by name in the <code>Controller</code>.  </p>
 <h2><a name="controllers" class="anchor" href="#controllers">Controllers</a><span class="ac">¶</span></h2><p>A controller is the mediator between model and view.  You can extend the controller using tranditional JavaScript prototype inheritance, or use the built-in <code>extend</code> method:</p>
-<pre><code>var Comment = Espresso.extend(Espress.Controller, {
+<pre><code>var Comment = Espresso.Controller.extend({
   init: function(options) { ... }
 })
-</code></pre><h3><a name="controllers/constructor" class="anchor" href="#controllers/constructor">constructor </a><code>new Controller(view, options)</code><span class="ac">¶</span></h3><p>Options over-ride anything defined on the class.</p>
+</code></pre><h3><a name="controllers/constructor" class="anchor" href="#controllers/constructor">constructor </a><code>new Controller(options)</code><span class="ac">¶</span></h3><p>Options over-ride anything defined on the class.</p>
 <p>If <code>options.view</code> is a DOM node, then the controller is bound to that node.</p>
-<p>If a <code>string</code> is specified instead, then it is used to locate the DOM node by ID and clone its first child.  This is <a href="http://jsperf.com/innerclone">much faster</a> than doing templating and parsing templates using <code>innerHTML</code>.</p>
+<p>If <code>options.view</code> is a <code>string</code>, then it is used to locate the DOM node by ID and clone its first child.  This is <a href="http://jsperf.com/innerclone">much faster</a> than doing templating and parsing templates using <code>innerHTML</code>.</p>
 <h3><a name="controllers/init" class="anchor" href="#controllers/init">init </a><code>init(options)</code><span class="ac">¶</span></h3><p>Gets called automatically as soon as the controller is bound to a view, and gets passed <code>options</code>.</p>
 <h3><a name="controllers/ref" class="anchor" href="#controllers/ref">ref</a><span class="ac">¶</span></h3><p>Object containing all DOM nodes with <code>data-ref</code> attribute, keyed by name.  Faster than doing <code>view.querySelector</code> as all nodes with <code>ref</code> attribute are fetched just once when the controller is initialised.</p>
 <pre><code>this.ref.author.textContent = &#39;hello world&#39;
-</code></pre><h3><a name="controllers/view" class="anchor" href="#controllers/view">view</a><span class="ac">¶</span></h3><p>The view property refers to the view DOM Element</p>
+</code></pre><p>Note that for convenience, ref.view refers to controller&#39;s DOM node.</p>
+<h3><a name="controllers/view" class="anchor" href="#controllers/view">view</a><span class="ac">¶</span></h3><p>The view property refers to the view DOM Element</p>
 <h3><a name="controllers/model" class="anchor" href="#controllers/model">model</a><span class="ac">¶</span></h3><p>Model property refers to the Model instance backing the controller.  Whenever the model changes, the controller&#39;s <code>render</code> method is called automatically.</p>
 <h3><a name="controllers/include" class="anchor" href="#controllers/include">include </a><code>include(controller, [view])</code><span class="ac">¶</span></h3><p>Add child controllers and views:</p>
-<pre><code>var page = this.include(new PageController(&#39;page-view&#39;, { name: &#39;Page 1&#39; }), this.ref.page);
+<pre><code>var page = this.include(new PageController({ view: &#39;page-view&#39;, name: &#39;Page 1&#39; }), this.ref.page);
 </code></pre><p>If a <code>view</code> node is specified, the child controller will have its view set to that node at the same time.</p>
 <h3><a name="controllers/remove" class="anchor" href="#controllers/remove">remove </a><code>remove()</code><span class="ac">¶</span></h3><p>Removes the view and any included controllers, and removes any listeners attached with <code>listenTo</code></p>
 <h3><a name="controllers/listento" class="anchor" href="#controllers/listento">listenTo </a><code>listenTo(object, event, fn)</code><span class="ac">¶</span></h3><p>The <code>listenTo</code> method of the controller lets you listen to events raised by other objects:</p>
