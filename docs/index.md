@@ -48,7 +48,7 @@ A `data-ref` is a special attribute that allows us to refer to that `node` by na
 A controller is the mediator between model and view.  You can extend the controller using tranditional JavaScript prototype inheritance, or use the built-in `extend` method:
 
 ```
-var Comment = Espresso.extend(Espress.Controller, {
+var Comment = Espresso.extend(Espresso.Controller, {
   init: function(options) { ... }
 })
 ```
