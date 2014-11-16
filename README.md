@@ -23,7 +23,7 @@ Now dive in and check out the [To-Do Example](https://github.com/techlayer/espre
 
 ### Documentation
 
-Backbone style docs can be found [here](https://cdn.rawgit.com/techlayer/espresso.js/master/docs/index.html)
+Backbone style docs can be found [here](https://rawgit.com/techlayer/espresso.js/master/docs/index.html)
 
 ### Testing
 
