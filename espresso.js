@@ -1,3 +1,16 @@
+/*
+                                                       ________        
+____________________________________________________   ______(_)_______
+_  _ \_  ___/__  __ \_  ___/  _ \_  ___/_  ___/  __ \  _____  /__  ___/
+/  __/(__  )__  /_/ /  /   /  __/(__  )_(__  )/ /_/ /______  / _(__  ) 
+\___//____/ _  .___//_/    \___//____/ /____/ \____/_(_)__  /  /____/  
+            /_/                                        /___/           
+
+Designed, built, and released under MIT license by @akrymski. Learn more at
+https://github.com/techlayer/espresso.js
+
+*/
+
 var animate = window.requestAnimationFrame || function(cb) { window.setTimeout(cb, 0); };
 var slice = Array.prototype.slice;
 var splice = Array.prototype.splice;
@@ -33,7 +46,7 @@ var isEqual = function(a, b) {
 };
 var getView = function(name) {
   var cache = window._view_cache || (window._view_cache = {});
-  var view = cache[name] || (cache[name] = document.getElementById(name));
+  var view = cache[name] || (cache[name] = document.getElementById(name).children[0]);
   return view.cloneNode(true);
 }
 var EventEmitter = {
@@ -89,7 +102,6 @@ var Model = extend(Object, EventEmitter, {
 
 // A collection holds an ordered number of Objects and provides helper methods like add, remove, get, filter, etc.
 // A collection also triggers a change event that a List can subscribe to directly
-// A collection creates GUIDs (or auto-increments) for objects by default
 var Collection = extend(Object, EventEmitter, {
   idAttribute: 'id', 
   constructor: function(items) {
@@ -202,6 +214,8 @@ var Collection = extend(Object, EventEmitter, {
   filter: function(fn) { return this.items.filter(fn) }
 });
 
+// A Controller is like Backbone's View or React's Component
+// It listens to model changes and updates the view
 var Controller = extend(Object, EventEmitter, {
   refAttribute: 'data-ref',
   constructor: function(options) {
@@ -310,8 +324,9 @@ var Controller = extend(Object, EventEmitter, {
   }
 });
 
+// A List listens to changes in the collection and updates itself
+// Every item in the list is an instance of the specified Controller
 var List = extend(Controller, {
-  // a collection is optional
   constructor: function(controller, collection) {
     this.controller = controller;
     this.collection = Array.isArray(collection || []) ? new Collection(collection) : collection;

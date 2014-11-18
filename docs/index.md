@@ -48,18 +48,18 @@ A `data-ref` is a special attribute that allows us to refer to that `node` by na
 A controller is the mediator between model and view.  You can extend the controller using tranditional JavaScript prototype inheritance, or use the built-in `extend` method:
 
 ```
-var Comment = Espresso.extend(Espress.Controller, {
+var Comment = Espresso.Controller.extend({
   init: function(options) { ... }
 })
 ```
         
-### constructor `new Controller(view, options)`
+### constructor `new Controller(options)`
 
 Options over-ride anything defined on the class.
 
 If `options.view` is a DOM node, then the controller is bound to that node.
 
-If a `string` is specified instead, then it is used to locate the DOM node by ID and clone its first child.  This is [much faster](http://jsperf.com/innerclone) than doing templating and parsing templates using `innerHTML`.
+If `options.view` is a `string`, then it is used to locate the DOM node by ID and clone its first child.  This is [much faster](http://jsperf.com/innerclone) than doing templating and parsing templates using `innerHTML`.
 
 ### init `init(options)`
 Gets called automatically as soon as the controller is bound to a view, and gets passed `options`.
@@ -68,6 +68,8 @@ Gets called automatically as soon as the controller is bound to a view, and gets
 Object containing all DOM nodes with `data-ref` attribute, keyed by name.  Faster than doing `view.querySelector` as all nodes with `ref` attribute are fetched just once when the controller is initialised.
 
     this.ref.author.textContent = 'hello world'
+
+Note that for convenience, ref.view refers to controller's DOM node.
 
 ### view
 The view property refers to the view DOM Element
@@ -78,7 +80,7 @@ Model property refers to the Model instance backing the controller.  Whenever th
 ### include `include(controller, [view])`
 Add child controllers and views:
 
-    var page = this.include(new PageController('page-view', { name: 'Page 1' }), this.ref.page);
+    var page = this.include(new PageController({ view: 'page-view', name: 'Page 1' }), this.ref.page);
 
 If a `view` node is specified, the child controller will have its view set to that node at the same time.
 
