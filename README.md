@@ -21,7 +21,7 @@ Alternatively grab the [standalone version](https://raw.githubusercontent.com/te
 
 Now dive in and check out the [To-Do Example](https://github.com/techlayer/espresso.js/tree/master/examples/todomvc) app.
 
-### Documentation
+### Documentation
 
 Backbone style docs can be found [here](https://rawgit.com/techlayer/espresso.js/master/docs/index.html)
 
