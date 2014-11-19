@@ -296,6 +296,7 @@ var Controller = extend(Object, EventEmitter, {
     else if (attr === 'html') node.innerHTML = value || '';
     else if (attr === 'display') node.style.display = value ? '' : 'none';
     else if (attr === 'checked') node.checked = value;
+    else if (attr === 'disabled') node.disabled = value;
     else if (attr === 'classList') {
       for (var className in value) {
         if (value[className]) node.classList.add(className);
