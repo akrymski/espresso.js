@@ -291,9 +291,8 @@ var Controller = extend(Object, EventEmitter, {
       this.listenTo(node, eventName, function(fn, e) {
         if (fn.call(this, e) === false && e.preventDefault) e.preventDefault();
       }.bind(this, value));
-    } else {
-      attr in node ? node[attr] = value : node.setAttribute(attr, value)
-    }
+    } else if (attr in node) node[attr] = value;
+    else node.setAttribute(attr, value);
   },
   _wrap: function(fn) {
     return function() {

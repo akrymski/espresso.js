@@ -1,7 +1,7 @@
 {
   "name": "espresso.js",
   "description": "Minimalistic MVC",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "dependencies": {},
   "repository": {
     "type": "git",
