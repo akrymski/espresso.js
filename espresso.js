@@ -37,25 +37,11 @@ var extend = function(parentClass, props) {
 };
 var isEqual = function(a, b) {
   if (a === b) return true;
-  var i, len, key;
-  if (isArray(a)) {
-    if (!isArray(b)) return false;
-    if (a.length !== b.length) return false;
-    for (i = 0, len = a.length; i < len; i++) {
-      if (!isEqual(a[i], b[i])) return false;
-    }
-    return true;
-  }
-  if (isObject(a) && isObject(b)) {
-    var aKeys = Object.keys(a), bKeys = Object.keys(b);
-    if (aKeys.length !== bKeys.length) return false;
-    for (i = 0, len = aKeys.length; i < len; i++) {
-      key = aKeys[i];
-      if (!isEqual(a[key], b[key])) return false;
-    }
-    return true;
-  }
-  return false;
+  if (a === null || typeof a !== "object" || b === null || typeof b !== "object") return false;
+  var len = 0, prop;
+  for (prop in a) if (!isEqual(a[prop], b[prop])) return false; else len++;
+  for (prop in b) len--;
+  return 0 === len;
 };
 var getView = function(name) {
   var cache = window._view_cache || (window._view_cache = {});
