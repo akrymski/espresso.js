@@ -11,7 +11,6 @@ https://github.com/techlayer/espresso.js
 
 */
 
-var animate = window.requestAnimationFrame || function(cb) { window.setTimeout(cb, 0); };
 var slice = Array.prototype.slice;
 var splice = Array.prototype.splice;
 var noop = function() {};
@@ -276,7 +275,7 @@ var Controller = extend(Object, EventEmitter, {
       if (!isUndefined(eventName) && eventName !== x[1]) return;
 
       var removeListener = x[0].removeEventListener || x[0].removeListener || x[0].off;
-      removeListener(x[1], x[2]);
+      removeListener.call(x[0], x[1], x[2]);
     }.bind(this));
   },
   remove: function(node) {
@@ -292,12 +291,10 @@ var Controller = extend(Object, EventEmitter, {
     return controller;
   },
   setAttribute: function(node, attr, value) {
-    if (attr === 'text') node.textContent = value || '';
-    else if (attr === 'html') node.innerHTML = value || '';
+    if (isUndefined(value)) value = '';
+    if (attr === 'text') node.textContent = value;
+    else if (attr === 'html') node.innerHTML = value;
     else if (attr === 'display') node.style.display = value ? '' : 'none';
-    else if (attr === 'checked') node.checked = value;
-    else if (attr === 'disabled') node.disabled = value;
-    else if (attr === 'selected') node.selected = value;
     else if (attr === 'classList') {
       for (var className in value) {
         if (value[className]) node.classList.add(className);
@@ -308,32 +305,32 @@ var Controller = extend(Object, EventEmitter, {
       this.listenTo(node, eventName, function(fn, e) {
         if (fn.call(this, e) === false && e.preventDefault) e.preventDefault();
       }.bind(this, value));
-    } else node.setAttribute(attr, value);
+    } else {
+      attr in node ? node[attr] = value : node.setAttribute(attr, value)
+    }
   },
   _wrap: function(fn) {
     return function() {
       var set = this.setAttribute, refs = this.ref, include = this.include;
       var prev = this.DOM || {};
       var next = this.DOM = fn.call(this);
-      if (!isObject(next)) return;
+      if (!isObject(next) || next === this) return;
 
-      animate(function() {
-        for (var ref in next) {
-          var node = refs[ref];
-          if (isUndefined(node)) throw "Invalid data-ref name specified";
-          var nextNode = next[ref], prevNode = prev[ref] || {};
+      for (var ref in next) {
+        var node = refs[ref];
+        if (isUndefined(node)) throw "Invalid data-ref name specified";
+        var nextNode = next[ref], prevNode = prev[ref] || {};
 
-          if (nextNode instanceof Controller) {
-            if (nextNode !== prevNode) include(nextNode, node);
-            continue;
-          }
-          
-          for (var attr in nextNode) {
-            var value = nextNode[attr];
-            if (value !== prevNode[attr]) set.call(this, node, attr, value);
-          }
+        if (nextNode instanceof Controller) {
+          if (nextNode !== prevNode) include(nextNode, node);
+          continue;
         }
-      }.bind(this))
+        
+        for (var attr in nextNode) {
+          var value = nextNode[attr];
+          if (value !== prevNode[attr]) set.call(this, node, attr, value);
+        }
+      }
       
       return next;
     }
