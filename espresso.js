@@ -281,6 +281,7 @@ var Controller = extend(Object, EventEmitter, {
     if (attr === 'text') node.textContent = value;
     else if (attr === 'html') node.innerHTML = value;
     else if (attr === 'display') node.style.display = value ? '' : 'none';
+    else if (attr === 'value') node.value = value;
     else if (attr === 'classList') {
       for (var className in value) {
         if (value[className]) node.classList.add(className);
@@ -292,7 +293,10 @@ var Controller = extend(Object, EventEmitter, {
         if (fn.call(this, e) === false && e.preventDefault) e.preventDefault();
       }.bind(this, value));
     } else if (attr in node) node[attr] = value;
-    else node.setAttribute(attr, value);
+    else {
+      if(null === value) node.removeAttribute(attr);
+      else node.setAttribute(attr, value);
+    }
   },
   _wrap: function(fn) {
     return function() {
