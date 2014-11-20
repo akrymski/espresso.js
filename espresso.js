@@ -307,7 +307,7 @@ var Controller = extend(Object, EventEmitter, {
 
       for (var ref in next) {
         var node = refs[ref];
-        if (isUndefined(node)) throw "Invalid data-ref name specified";
+        if (isUndefined(node)) throw "Invalid data-ref name '"+ref+"' specified";
         var nextNode = next[ref], prevNode = prev[ref] || {};
 
         if (nextNode instanceof Controller) {
