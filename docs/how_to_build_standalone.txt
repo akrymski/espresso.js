@@ -1,0 +1,5 @@
+# do once
+sudo npm install browserify
+sudo npm install uglify-js
+# every time, to build standalone
+browserify espresso.js --s Espresso | uglifyjs > espresso.min.js
