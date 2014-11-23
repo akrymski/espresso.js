@@ -581,11 +581,11 @@ The callback function is automatically bound to the controller for you, so <code
 new List(function(model) { new ToDoItem({ model: model }) })
 </code></pre><p>If <code>items</code> are passed in, they are used as the default items in the list.  <code>items</code> can also be an instance of a <code>Collection</code> class, in which the list binds directly to that collection.</p>
 <h3><a name="lists/set" class="anchor" href="#lists/set">set </a><code>set([ ... ])</code><span class="ac">¶</span></h3><p>Sets the items in the list, and returns the list.</p>
-<pre><code>render: function() {
-  init: function() {
-    this.todos = [ { text: &#39;shop&#39; }, { text: &#39;code&#39; } ]
-    this.list = new List(ToDoItem)
-  }
+<pre><code>init: function() {
+  this.todos = [ { text: &#39;shop&#39; }, { text: &#39;code&#39; } ]
+  this.list = new List(ToDoItem)
+},
+render: function() {
   return {
     todos: this.list.set(this.todos)
   }
