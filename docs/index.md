@@ -223,11 +223,11 @@ If `items` are passed in, they are used as the default items in the list.  `item
 ### set `set([ ... ])`
 Sets the items in the list, and returns the list.
 
+    init: function() {
+      this.todos = [ { text: 'shop' }, { text: 'code' } ]
+      this.list = new List(ToDoItem)
+    },
     render: function() {
-      init: function() {
-        this.todos = [ { text: 'shop' }, { text: 'code' } ]
-        this.list = new List(ToDoItem)
-      }
       return {
         todos: this.list.set(this.todos)
       }
