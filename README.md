@@ -13,7 +13,9 @@ We've aimed to bring the ideas of unidirectional data flow of [Flux](http://face
 
 ### Documentation
 
-Backbone style docs can be found [here](https://rawgit.com/techlayer/espresso.js/master/docs/index.html)
+Backbone-style docs can be found [here](https://rawgit.com/techlayer/espresso.js/master/docs/index.html)
+
+All documentation is automatically generated from `docs/index.md` using [Bocco](https://github.com/akrymski/bocco).
 
 ### Getting Started
 
