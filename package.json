@@ -1,7 +1,7 @@
 {
   "name": "espresso.js",
   "description": "Minimalistic MVC",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "dependencies": {},
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   "scripts": {
     "lint": "jshint index.js",
     "test": "mocha",
-    "prebuild" : "npm run lint && npm run test",
+    "prebuild": "npm run lint && npm run test",
     "build": "browserify index.js --standalone Espresso | uglifyjs > espresso.min.js"
   },
   "keywords": [
