@@ -16,10 +16,7 @@ var splice = Array.prototype.splice;
 var noop = function() {};
 var isUndefined = function(arg) { return arg === void 0 };
 var isFunction = function(x) { return typeof x === 'function' };
-var isNumber = function(x) { return typeof x === 'number' };
 var isObject = function(x) { return typeof x === 'object' && x !== null };
-var isString = function(x) { return typeof x === 'string' };
-var isNode = function(x) { return x && x.nodeType > 0 };
 var isArray = Array.isArray;
 var toObject = function(key, val) { var x = {}; x[key] = val; return x };
 var assign = function(o) {
@@ -43,11 +40,6 @@ var isEqual = function(a, b) {
   for (prop in b) len--;
   return 0 === len;
 };
-var getView = function(name) {
-  var cache = window._view_cache || (window._view_cache = {});
-  var view = cache[name] || (cache[name] = document.getElementById(name).children[0]);
-  return view.cloneNode(true);
-}
 var EventEmitter = {
   addListener: function(name, fn) {
     var listeners = this._listeners || (this._listeners = {});
@@ -226,8 +218,13 @@ var Controller = extend(Object, EventEmitter, {
   },
   init: noop, // can override
   render: noop, // must override
+  getView: function(name) {
+    var cache = window._view_cache || (window._view_cache = {});
+    var view = cache[name] || (cache[name] = document.getElementById(name).children[0]);
+    return view.cloneNode(true);
+  },
   setView: function(view) {
-    if (isString(view)) view = getView(view);
+    if (typeof view === 'string') view = this.getView(view);
     this.view = view;
     this._refs();
     this.init();
