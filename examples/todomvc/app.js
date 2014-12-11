@@ -40,6 +40,7 @@ var ToDoStore = Collection.extend({
         return this.toArray();
     },
     save: function() {
+        console.log(this.toArray())
         localStorage.setItem('todo', JSON.stringify(this.toArray()));
     }
 });
@@ -60,7 +61,10 @@ var ToDoItem = Controller.extend({
         store.remove({ id: this.model.id });
     },
     key: function(e) {
-        if (e.which === ENTER_KEY) this.set({ editing: false, text: e.target.value });
+        if (e.which === ENTER_KEY) {
+            this.set({ editing: false });
+            store.set({ id: this.model.id, text: e.target.value });
+        }
         else if (e.which === ESC_KEY) {
             this.set({ editing: false });
             e.target.value = this.model.text;
