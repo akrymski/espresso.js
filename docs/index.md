@@ -49,7 +49,7 @@ A controller is the mediator between model and view.  You can extend the control
 
 ```
 var Comment = Espresso.Controller.extend({
-  init: function(options) { ... }
+  init: function() { ... }
 })
 ```
         

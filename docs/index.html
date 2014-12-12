@@ -499,7 +499,7 @@
 <h3><a name="views/data-ref" class="anchor" href="#views/data-ref">data-ref</a><span class="ac">¶</span></h3><p>A <code>data-ref</code> is a special attribute that allows us to refer to that <code>node</code> by name in the <code>Controller</code>.  </p>
 <h2><a name="controllers" class="anchor" href="#controllers">Controllers</a><span class="ac">¶</span></h2><p>A controller is the mediator between model and view.  You can extend the controller using tranditional JavaScript prototype inheritance, or use the built-in <code>extend</code> method:</p>
 <pre><code>var Comment = Espresso.Controller.extend({
-  init: function(options) { ... }
+  init: function() { ... }
 })
 </code></pre><h3><a name="controllers/constructor" class="anchor" href="#controllers/constructor">constructor </a><code>new Controller(options)</code><span class="ac">¶</span></h3><p>Options over-ride anything defined on the class.</p>
 <p>If <code>options.view</code> is a DOM node, then the controller is bound to that node.</p>
