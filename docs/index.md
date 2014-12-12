@@ -61,8 +61,8 @@ If `options.view` is a DOM node, then the controller is bound to that node.
 
 If `options.view` is a `string`, then it is used to locate the DOM node by ID and clone its first child.  This is [much faster](http://jsperf.com/innerclone) than doing templating and parsing templates using `innerHTML`.
 
-### init `init()`
-Gets called automatically as soon as the controller is bound to a view.
+### init
+Gets called automatically as soon as the controller is bound to a view.  The perfect place to initialize your views.
 
 ### ref
 Object containing all DOM nodes with `data-ref` attribute, keyed by name.  Faster than doing `view.querySelector` as all nodes with `ref` attribute are fetched just once when the controller is initialised.
