@@ -145,10 +145,10 @@ This property is used to set the default properties of the model, which are used
 Sets new values on the model and fires a `change` event if necessary.  Since changing the model will cause the controller to re-render, you should aim to set all required properties in one `set()` call.
 
 ### get `get(attr)`
-`attr` can be a function name or attribute name
+Returns the value of the objects `attr` attribute or its default
 
 ### toObject
-returns the model attributes as a pure object.
+Returns the model attributes as a pure Object.
 
 ## Collections
 Collections are thin wrappers over native arrays and fire a `change` method when they have been modified.  The `change` method specifies the `index` and which elements have been added, removed and updated.
