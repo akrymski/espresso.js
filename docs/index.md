@@ -19,7 +19,7 @@ If you're using Browserify or Node/CommonJS, simply install the package:
 
 Alternatively grab the [standalone version](https://raw.githubusercontent.com/techlayer/espresso.js/master/espresso.min.js?token=AAamF6ZPKrH6WZ5pN6wwM4QtQphAdmbLks5Ua2ecwA%3D%3D) that you can import with a `<script>` tag or checkout the [GitHub Repo](https://github.com/techlayer/espresso.js).
 
-Now dive in and check out the [To-Do Example](https://github.com/techlayer/espresso.js/tree/master/examples/todomvc) app.
+Now dive in and check out the [To-Do Example app in action](https://rawgit.com/techlayer/espresso.js/master/examples/todomvc/index.html) or read the [source code](https://github.com/techlayer/espresso.js/tree/master/examples/todomvc).
 
 ## Views
 A view is a DOM Node.  For example:
