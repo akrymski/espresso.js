@@ -50,7 +50,7 @@ var EventEmitter = {
     var listeners = (this._listeners || {})[name];
     if (listeners) listeners.splice(listeners.indexOf(fn), 1);
   },
-  emit : function(name) {
+  emit: function(name) {
     var listeners = (this._listeners || {})[name];
     if (listeners) {
       var args = slice.call(arguments, 1);
@@ -70,7 +70,7 @@ var Model = extend(Object, EventEmitter, {
   },
   init: noop,
   set: function(key, value) {
-    var attr = arguments.length < 2 ? key : toObject(key, value);
+    var attr = arguments.length < 2 ? key: toObject(key, value);
     if (!this.isEqual(attr)) {
       assign(this, attr);
       this.emit('change', this);
@@ -104,7 +104,7 @@ var Collection = extend(Object, EventEmitter, {
     return this.items.length;
   },
   reset: function(items) {
-    this.items = isArray(items) ? items.slice(0) : [];
+    this.items = isArray(items) ? items.slice(0): [];
     this.emit('change');
   },
   _setAll: function(items, key) {
@@ -146,7 +146,7 @@ var Collection = extend(Object, EventEmitter, {
     return this;
   },
   get: function(index) {
-    return isObject(index) ? this.find(index) : this.items[index];
+    return isObject(index) ? this.find(index): this.items[index];
   },
   // set(index, value)
   // set([ new values ])
@@ -211,7 +211,7 @@ var Controller = extend(Object, EventEmitter, {
   refAttribute: 'data-ref',
   constructor: function(options) {
     assign(this, options || {});
-    this.model = (this.model instanceof Model) ? this.model : new Model(this.model);
+    this.model = (this.model instanceof Model) ? this.model: new Model(this.model);
     this.render = this._wrap(this.render).bind(this);
     this.setView = this.setView.bind(this);
     if (this.view) this.setView(this.view);
@@ -277,7 +277,7 @@ var Controller = extend(Object, EventEmitter, {
     if (isUndefined(value)) value = '';
     if (attr === 'text') node.textContent = value;
     else if (attr === 'html') node.innerHTML = value;
-    else if (attr === 'display') node.style.display = value ? '' : 'none';
+    else if (attr === 'display') node.style.display = value ? '': 'none';
     else if (attr === 'classList') {
       for (var className in value) {
         if (value[className]) node.classList.add(className);
@@ -324,7 +324,7 @@ var Controller = extend(Object, EventEmitter, {
 var List = extend(Controller, {
   constructor: function(controller, collection) {
     this.controller = controller;
-    this.collection = Array.isArray(collection || []) ? new Collection(collection) : collection;
+    this.collection = Array.isArray(collection || []) ? new Collection(collection): collection;
     this.controllers = [];
   },
   controller: function() {
@@ -390,13 +390,27 @@ var List = extend(Controller, {
   },
 });
 
-module.exports = {
-  EventEmitter : EventEmitter,
-  Model : Model,
-  Collection : Collection,
-  Controller : Controller,
+// Expose
+var _exports = {
+  EventEmitter: EventEmitter,
+  Model: Model,
+  Collection: Collection,
+  Controller: Controller,
   List: List,
   assign: assign,
   extend: extend,
   isEqual: isEqual
+};
+
+if (typeof module !== 'undefined' && module.exports) {
+  // CommonJS / Node.js
+  module.exports = _exports;
+} else if (typeof define !== 'undefined' && define.amd) {
+  // AMD / RequireJS
+  define(function() {
+    return _exports;
+  });
+} else if (typeof window !== 'undefined') {
+  // Browser
+  window.espresso = _exports;
 }
