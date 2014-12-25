@@ -391,7 +391,7 @@ var List = extend(Controller, {
 });
 
 // Expose
-var exports = {
+var _exports = {
   EventEmitter: EventEmitter,
   Model: Model,
   Collection: Collection,
@@ -404,13 +404,13 @@ var exports = {
 
 if (typeof module !== 'undefined' && module.exports) {
   // CommonJS / Node.js
-  module.exports = exports;
+  module.exports = _exports;
 } else if (typeof define !== 'undefined' && define.amd) {
   // AMD / RequireJS
   define(function() {
-    return exports;
+    return _exports;
   });
 } else if (typeof window !== 'undefined') {
   // Browser
-  window.espresso = exports;
+  window.espresso = _exports;
 }
