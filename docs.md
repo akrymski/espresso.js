@@ -19,7 +19,7 @@ If you're using Browserify or Node/CommonJS, simply install the package:
 
 Alternatively grab the [standalone version](https://raw.githubusercontent.com/techlayer/espresso.js/master/espresso.min.js?token=AAamF6ZPKrH6WZ5pN6wwM4QtQphAdmbLks5Ua2ecwA%3D%3D) that you can import with a `<script>` tag or checkout the [GitHub Repo](https://github.com/techlayer/espresso.js).
 
-Now dive in and check out the [To-Do Example](https://github.com/techlayer/espresso.js/tree/master/examples/todomvc) app.
+Now dive in and check out the [To-Do Example app in action](https://rawgit.com/techlayer/espresso.js/master/examples/todomvc/index.html) or read the [source code](https://github.com/techlayer/espresso.js/tree/master/examples/todomvc).
 
 ## Views
 A view is a DOM Node.  For example:
@@ -49,7 +49,7 @@ A controller is the mediator between model and view.  You can extend the control
 
 ```
 var Comment = Espresso.Controller.extend({
-  init: function(options) { ... }
+  init: function() { ... }
 })
 ```
         
@@ -61,8 +61,8 @@ If `options.view` is a DOM node, then the controller is bound to that node.
 
 If `options.view` is a `string`, then it is used to locate the DOM node by ID and clone its first child.  This is [much faster](http://jsperf.com/innerclone) than doing templating and parsing templates using `innerHTML`.
 
-### init `init(options)`
-Gets called automatically as soon as the controller is bound to a view, and gets passed `options`.
+### init
+Gets called automatically as soon as the controller is bound to a view.  The perfect place to initialize your views.
 
 ### ref
 Object containing all DOM nodes with `data-ref` attribute, keyed by name.  Faster than doing `view.querySelector` as all nodes with `ref` attribute are fetched just once when the controller is initialised.
@@ -145,10 +145,10 @@ This property is used to set the default properties of the model, which are used
 Sets new values on the model and fires a `change` event if necessary.  Since changing the model will cause the controller to re-render, you should aim to set all required properties in one `set()` call.
 
 ### get `get(attr)`
-`attr` can be a function name or attribute name
+Returns the value of the objects `attr` attribute or its default
 
 ### toObject
-returns the model attributes as a pure object.
+Returns the model attributes as a pure Object.
 
 ## Collections
 Collections are thin wrappers over native arrays and fire a `change` method when they have been modified.  The `change` method specifies the `index` and which elements have been added, removed and updated.

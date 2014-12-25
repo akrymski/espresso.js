@@ -1,6 +1,6 @@
 global.window = {};
 
-var espresso = require("../espresso.js")
+var espresso = require("../index.js")
 var assert = require("assert")
 
 var comments = [

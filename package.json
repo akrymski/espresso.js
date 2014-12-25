@@ -1,7 +1,7 @@
 {
   "name": "espresso.js",
   "description": "Minimalistic MVC",
-  "version": "0.0.8",
+  "version": "1.0.1",
   "dependencies": {},
   "repository": {
     "type": "git",
@@ -12,9 +12,17 @@
     "url": "https://github.com/techlayer/espresso.js/issues"
   },
   "main": "./espresso",
-  "devDependencies": {},
+  "devDependencies": {
+    "jshint": "latest",
+    "mocha": "latest",
+    "browserify": "latest",
+    "uglify-js": "latest"
+  },
   "scripts": {
-    "test": "mocha"
+    "lint": "jshint index.js",
+    "test": "mocha",
+    "prebuild": "npm run lint && npm run test",
+    "build": "browserify index.js --standalone Espresso | uglifyjs > espresso.min.js"
   },
   "keywords": [
     "mvc"
