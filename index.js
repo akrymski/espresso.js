@@ -277,6 +277,7 @@ var Controller = extend(Object, EventEmitter, {
     if (isUndefined(value)) value = '';
     if (attr === 'text') node.textContent = value;
     else if (attr === 'html') node.innerHTML = value;
+    else if (attr === 'style') node.setAttribute('style', value);
     else if (attr === 'display') node.style.display = value ? '' : 'none';
     else if (attr === 'classList') {
       for (var className in value) {
