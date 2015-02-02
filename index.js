@@ -275,7 +275,7 @@ var Controller = extend(Object, EventEmitter, {
   },
   setAttribute: function(node, attr, value) {
     if (isUndefined(value)) value = '';
-    if (attr === 'text') node.textContent = value;
+    if (attr === 'text') (node.firstChild || node).nodeValue = value;
     else if (attr === 'html') node.innerHTML = value;
     else if (attr === 'style') node.setAttribute('style', value);
     else if (attr === 'display') node.style.display = value ? '' : 'none';
@@ -336,7 +336,7 @@ var List = extend(Controller, {
 
     // if Controller is a class, set this.controller to a function that returns a new controller of that class
     // and use the first child element as the view
-    if (isFunction(this.controller.prototype.remove)) {
+    if (this.controller.prototype && isFunction(this.controller.prototype.remove)) {
       this.controller = function(Controller, view, model) {
         return new Controller({ view: view.cloneNode(true), model: model });
       }.bind(this, this.controller, this.view.children[0].cloneNode(true));
