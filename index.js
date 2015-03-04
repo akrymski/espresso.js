@@ -218,6 +218,7 @@ var Controller = extend(Object, EventEmitter, {
   },
   init: noop, // can override
   render: noop, // must override
+  clickEventName: 'click',
   getView: function(name) {
     var cache = window._view_cache || (window._view_cache = {});
     var view = cache[name] || (cache[name] = document.getElementById(name).children[0]);
@@ -244,6 +245,7 @@ var Controller = extend(Object, EventEmitter, {
     return this;
   },
   listenTo: function(obj, eventName, fn) {
+    if (eventName === 'click') eventName = this.clickEventName;
     this._listenTo = this._listenTo || [];
     var on = obj.addEventListener || obj.addListener || obj.on;
     if (!isFunction(on)) throw "Can't listen to this object!";
@@ -275,11 +277,13 @@ var Controller = extend(Object, EventEmitter, {
   },
   setAttribute: function(node, attr, value) {
     if (isUndefined(value)) value = '';
-    if (attr === 'text') (node.firstChild || node).nodeValue = value;
     else if (attr === 'html') node.innerHTML = value;
     else if (attr === 'style') node.setAttribute('style', value);
     else if (attr === 'display') node.style.display = value ? '' : 'none';
-    else if (attr === 'classList') {
+    else if (attr === 'text') {
+      if (node.firstChild && node.firstChild.nodeType === 3) node.firstChild.nodeValue = value;
+      else node.textContent = value;
+    } else if (attr === 'classList') {
       for (var className in value) {
         if (value[className]) node.classList.add(className);
         else node.classList.remove(className);
