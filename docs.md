@@ -111,19 +111,20 @@ Shortcut for `this.model.set`
 ### render
 You should over-ride render with your own implementation that updates `this.view` node.  You can do this imperatively as in Backbone, or declaratively as follows:
 
-    render: function() {
+    render: function(model) {
       return {
-        list: this.list.set(items),
-        view: { classList: { editing: this.model.editing, completed: this.model.done } },
+        list: { include: this.list.set(items) },
+        view: { classList: { editing: model.editing, completed: model.done } },
         label: { onclick: this.edit, text: 'click here', display: true },
-        input: { value: this.model.text, onkeydown: this.key },
+        input: { value: model.text, onkeydown: this.key },
         toggle: { onclick: this.toggle, checked: this.model.done }
         count: { html: '<strong>'+store.active().length+'</strong> items left' },
       }
     }
 
-If your render function returns an `Object`, Espresso assumes that the object represents current state of `this.view` and peforms the required updates to the DOM after diff-ing against previous DOM object returned by `render`.  The declarative form specifies the name of the node on the left (as per the `data-ref` property) and attributes of that node on the right.  If the name maps to a controller instance, the controller is added as a **child** with that node as its `view`.  Apart from HTML attributes, some attributes offer special features:
+If your render function returns an `Object`, Espresso assumes that the object represents current state of `this.view` and peforms the required updates to the DOM after diff-ing against previous DOM object returned by `render`.  The declarative form specifies the name of the node on the left (as per the `data-ref` property) and attributes of that node on the right.  Apart from HTML attributes, some attributes offer special features:
 
+- `include` - include a child Controller instance with that node as its `view`
 - `on[event]` - binds an event handler to that node
 - `classList: { className: true|false }` - specifies which *classes* the node should have
 - `display: true|false` - whether to display the node
@@ -229,7 +230,7 @@ Sets the items in the list, and returns the list.
     },
     render: function() {
       return {
-        todos: this.list.set(this.todos)
+        todos: { include: this.list.set(this.todos) }
       }
     }
 
