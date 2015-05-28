@@ -277,6 +277,7 @@ var Controller = extend(Object, EventEmitter, {
   },
   setAttribute: function(node, attr, value) {
     if (isUndefined(value)) value = '';
+    else if (attr === 'include') this.include(value, node);
     else if (attr === 'html') node.innerHTML = value;
     else if (attr === 'style') node.setAttribute('style', value);
     else if (attr === 'display') node.style.display = value ? '' : 'none';
