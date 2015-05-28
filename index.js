@@ -300,7 +300,7 @@ var Controller = extend(Object, EventEmitter, {
     return function() {
       var set = this.setAttribute, refs = this.ref, include = this.include;
       var prev = this.DOM || {};
-      var next = this.DOM = fn.call(this);
+      var next = this.DOM = fn.call(this, this.model);
       if (!isObject(next) || next === this) return;
 
       for (var ref in next) {
@@ -403,5 +403,10 @@ module.exports = {
   List: List,
   assign: assign,
   extend: extend,
-  isEqual: isEqual
+  isEqual: isEqual,
+  toObject: toObject,
+  isArray: isArray,
+  isObject: isObject,
+  isFunction: isFunction,
+  isUndefined: isUndefined
 }
