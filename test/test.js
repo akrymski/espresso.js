@@ -111,4 +111,10 @@ describe('Collection', function() {
       assert.equal(collection.findIndex({id:1}), -1)
     })
   })
+  describe('#find', function() {
+    it('should find first matching item', function() {
+      var item = collection.find({ author: 'Author' });
+      assert.equal(item.id, 2)
+    })
+  })
 })

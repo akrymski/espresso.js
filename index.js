@@ -181,12 +181,12 @@ var Collection = extend(Object, EventEmitter, {
   },
   // find index of matching object, eg: findIndex({ id: 1 });
   findIndex: function(attr) {
-    var items = this.items, isEqual = Model.prototype.isEqual, id;
+    var items = this.items, _isEqual = Model.prototype.isEqual, id;
     if (this.idAttribute in attr) id = this.idAttribute;
     for (var i = 0, len = items.length; i < len; i++) {
       if (id) {
         if (attr[id] === items[i][id]) return i;
-      } else if (isEqual.call(attr, items[i])) return i;      
+      } else if (_isEqual.call(items[i], attr)) return i;
     }
     return -1;
   },
