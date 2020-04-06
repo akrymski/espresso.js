@@ -122,7 +122,7 @@ You should over-ride render with your own implementation that updates `this.view
       }
     }
 
-If your render function returns an `Object`, Espresso assumes that the object represents current state of `this.view` and peforms the required updates to the DOM after diff-ing against previous DOM object returned by `render`.  The declarative form specifies the name of the node on the left (as per the `data-ref` property) and attributes of that node on the right.  Apart from HTML attributes, some attributes offer special features:
+If your render function returns an `Object`, Espresso assumes that the object represents current state of `this.view` and performs the required updates to the DOM after diff-ing against previous DOM object returned by `render`.  The declarative form specifies the name of the node on the left (as per the `data-ref` property) and attributes of that node on the right.  Apart from HTML attributes, some attributes offer special features:
 
 - `include` - include a child Controller instance with that node as its `view`
 - `on[event]` - binds an event handler to that node
