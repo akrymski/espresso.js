@@ -13,7 +13,7 @@ We've aimed to bring the ideas of unidirectional data flow of [Flux](http://face
 
 ### Documentation
 
-Backbone-style docs can be found [here](http://techlayer.com/espresso.js)
+Backbone-style docs can be found [here](http://krymski.com/espresso.js)
 
 All documentation is automatically generated from `docs/index.md` using [Bocco](https://github.com/akrymski/bocco).
 
@@ -23,9 +23,9 @@ If you're using Browserify or Node/CommonJS, simply install the package:
 
 ```$ sudo npm install --save espresso.js```
 
-Alternatively grab the [standalone version](https://raw.githubusercontent.com/techlayer/espresso.js/master/espresso.min.js?token=AAamF6ZPKrH6WZ5pN6wwM4QtQphAdmbLks5Ua2ecwA%3D%3D) that you can import with a `<script>` tag or checkout the [GitHub Repo](https://github.com/techlayer/espresso.js).
+Alternatively grab the [standalone version](https://raw.githubusercontent.com/akrymski/espresso.js/master/espresso.min.js?token=AAamF6ZPKrH6WZ5pN6wwM4QtQphAdmbLks5Ua2ecwA%3D%3D) that you can import with a `<script>` tag or checkout the [GitHub Repo](https://github.com/akrymski/espresso.js).
 
-Now dive in and check out the [To-Do Example](https://rawgit.com/techlayer/espresso.js/master/examples/todomvc/index.html) app.
+Now dive in and check out the [To-Do Example](https://rawgit.com/akrymski/espresso.js/master/examples/todomvc/index.html) app.
 
 ### Testing
 
